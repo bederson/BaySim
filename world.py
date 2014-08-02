@@ -5,7 +5,7 @@ import random
 
 
 class World():
-    def __init__(self, world_width=WORLD_WIDTH, world_height=WORLD_HEIGHT, num_foods=NUM_FOODS, num_water_sources=NUM_WATER_SOURCES):
+    def __init__(self, world_width=WORLD_WIDTH, world_height=WORLD_HEIGHT, num_foods=NUM_FOODS):
         """
         __init__(int, int, int) -> None
         Constructor initializes the world with the dimensions of the world, and then generates
@@ -16,7 +16,7 @@ class World():
         self.grid = []
         self.elevation_min = 0
         self.elevation_max = 0
-        self.generate_world(num_foods, num_water_sources)
+        self.generate_world(num_foods)
 
     def get_food_level(self, row, col):
         """
@@ -98,7 +98,7 @@ class World():
                 if crab:
                     crab.step(cell, self)
 
-    def generate_world(self, num_foods, num_water_sources):
+    def generate_world(self, num_foods):
         """
         generate_world(int, int) -> None
         Initializes the world grid to a grid of cells with smoothly varying
@@ -177,15 +177,14 @@ class World():
                 num_foods -= 1
 
         # Replace some cells with water
-        while num_water_sources > 0:
-            row_num = random.randint(0, self.world_height - 1)
-            col_num = random.randint(0, self.world_width - 1)
+        for water_source_loc in WATER_SOURCES:
+            row_num = water_source_loc[ROW_INDEX]
+            col_num = water_source_loc[COL_INDEX]
             cell = self.grid[row_num][col_num]
             elevation = cell.get_elevation()
             if INIT_WATER_LEVEL < elevation:
                 water_cell = WaterSourceCell(self, [row_num, col_num], elevation)
                 self.grid[row_num][col_num] = water_cell
-                num_water_sources -= 1
 
         # Add the crabs (replace some water cells with creatures)
         num_crabs = NUM_CRABS

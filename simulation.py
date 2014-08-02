@@ -6,8 +6,8 @@ def neighbors(cell):
 
 
 class Simulation():
-    def __init__(self, world_width=WORLD_WIDTH, world_height = WORLD_HEIGHT, num_foods=NUM_FOODS, num_water_sources=NUM_WATER_SOURCES):
-        self.world = World(world_width, world_height, num_foods, num_water_sources)
+    def __init__(self, world_width=WORLD_WIDTH, world_height = WORLD_HEIGHT, num_foods=NUM_FOODS):
+        self.world = World(world_width, world_height, num_foods)
         self.world_handlers = []             # List of world handler callbacks
 
     def add_world_handler(self, handler):

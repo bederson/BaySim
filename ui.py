@@ -19,6 +19,7 @@ class UI():
     def init_handlers(self):
         self.create_event_timer()
         self.canvas.bind_all('<KeyPress>', self.key_handler)
+        self.canvas.bind_all('<Button-1>', self.mouse_handler)
         self.simulation.add_world_handler(self.world_handler)
 
     def create_event_timer(self, delay_time=STEP_TIME):
@@ -30,6 +31,11 @@ class UI():
 
     def key_handler(self, evt):
         # handle evt.keysym
+        pass
+
+    def mouse_handler(self, evt):
+        # Click prints cell location
+#        print "[" + str(evt.y / 8) + ", " + str(evt.x / 8) + "],"
         pass
 
     # Gets called by simulation when world changes
