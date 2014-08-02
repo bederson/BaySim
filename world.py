@@ -16,26 +16,6 @@ class World():
         self.water_delta = []
         self.generate_world(num_foods, num_water_sources)
 
-    def __str__(self):
-        """
-        __str__() -> String
-        Generates a string representing the world.
-        """
-        simple_output = ""
-        for row_num, row in enumerate(self.grid):
-            for col_num, cell in enumerate(row):
-                if isinstance(cell, WaterSourceCell):
-                    simple_output += "W,"
-                elif isinstance(cell, ArableLandCell):
-                    simple_output += "A,"
-                else:
-                    simple_output += "L,"
-                simple_output += str(cell.get_elevation()) + "," + str(cell.water_level)
-                simple_output += "  -  "
-            simple_output += "\n"
-
-        return simple_output
-
     def get_food_level(self, row, col):
         """
         get_food_level(int, int) -> float

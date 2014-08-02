@@ -15,25 +15,6 @@ class Simulation():
         self.world_handlers = []             # List of world handler callbacks
         self.creature_handlers = []          # List of creature handler callbacks
 
-    def start_text_simulation(self):
-        pass
-
-    def __str__(self):
-        output = ""
-        print(self.creature.get_location())
-        for row_num, row in enumerate(self.world.grid):
-            for col_num, cell in enumerate(row):
-                location = [row_num, col_num]
-                if location == self.creature.get_location():
-                    output += "ME(" + str(self.creature.get_hunger_level()) + ") "
-                elif isinstance(cell, ArableLandCell):
-                    output += "FOOD(" + str(self.world.get_food_level(row_num, col_num)) + ")"
-                else:
-                    output += "  ---  "
-                output += " "
-            output += "\n"
-        return output
-
     def add_world_handler(self, handler):
         self.world_handlers.append(handler)
 

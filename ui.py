@@ -39,8 +39,7 @@ class UI():
         if new_location:
             self.simulation.creature.eat(self.simulation.world)
             self.simulation.delay_creature_auto_movement()
-            self.canvas_move_creature(original_location, new_location)      # HACK because creature doesn't fire events
-            self.canvas_update_creature_meter()
+            self.creature_handler(original_location, new_location)      # Call manually because creature doesn't fire events
 
     # Gets called by simulation when world changes
     def world_handler(self):

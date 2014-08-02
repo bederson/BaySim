@@ -3,19 +3,19 @@ ROW_INDEX = 0
 COL_INDEX = 1
 
 # Initial values
-WORLD_DIM = 20
-CELL_SIZE = 32
+WORLD_DIM = 100
+CELL_SIZE = 8
 NUM_FOODS = 10
 NUMBER_OF_WATER_SOURCES = 2
 INIT_HUNGER = 0
-START_LOCATION = [3, 0]
+START_LOCATION = [50, 50]
 
 # Debugging constants (only set one to True at a time)
 DEBUG_ELEVATION = False
 DEBUG_WATER_LEVEL = False
 
 # Simulation constants
-TERRAIN_SMOOTHNESS = 10.0           # Bigger values makes the terrain smoother
+TERRAIN_SMOOTHNESS = 50.0           # Bigger values makes the terrain smoother
 HUNGER_GROWTH = 0.01
 FOOD_DEFAULT = -1.0
 FOOD_GROWTH = 0.01        # Amount food grows per step
@@ -25,8 +25,8 @@ DEFAULT_NUM_CREATURE_STEPS_TO_SKIP = 6
 NUM_CREATURE_STEPS_TO_SKIP_AFTER_MANUAL_MOVE = 30
 ELEVATION_MAX = 5
 EYE_SIGHT = WORLD_DIM / 6
-WATER_SOURCE_FLOW = 3.0            # Amount of water generated per step at each water source
-WATER_MAX_FLOW = 0.2               # Maximum amount of water that can move from one cell to another per step
+WATER_SOURCE_FLOW = 10.0            # Amount of water generated per step at each water source
+WATER_MAX_FLOW = 1.0               # Maximum amount of water that can move from one cell to another per step
 EVAPORATION_RATE = 0.02
 
 DIRECTION_DELTAS = {
