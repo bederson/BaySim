@@ -100,6 +100,12 @@ class World():
                 index += 1
             self.grid.append(row_list)
 
+        # write to a dump file
+        for row_num in range(self.world_height):
+            for col_num in range(self.world_width):
+                c = self.grid[row_num][col_num]
+                print row_num, col_num, c.elevation
+
         # Replace some cells with buildings
         num_buildings = NUM_BUILDINGS
         while num_buildings > 0:
