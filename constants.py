@@ -10,7 +10,8 @@ NUM_FOODS = 100
 NUM_WATER_SOURCES = 10
 NUM_BUILDINGS = 100
 NUM_CRABS = 10
-INIT_HEALTH = 0.5
+MAX_HEALTH = 10
+MIN_CRAB_DEPTH = 5
 
 # Simulation constants
 TERRAIN_SMOOTHNESS = 50.0           # Bigger values makes the terrain smoother
@@ -19,9 +20,8 @@ FOOD_DEFAULT = -1.0
 FOOD_GROWTH = 0.01        # Amount food grows per step
 LEVEL_MAX = 4
 STEP_TIME = 10           # In milliseconds
-ELEVATION_MAX = 5
-INIT_WATER_LEVEL = 2
-EVAPORATION_RATE = 0.001
+INIT_WATER_LEVEL = 0
+EVAPORATION_RATE = 0.01
 
 DIRECTION_DELTAS = {
     'Left':  [0, -1],
@@ -34,7 +34,11 @@ DIRECTION_DELTAS = {
 METER_HEIGHT = 5
 
 # Image filenames
-IMAGE_CRAB = "images/crab.gif"
+IMAGE_CRAB1 = "images/crab1.gif"
+IMAGE_CRAB2 = "images/crab2.gif"
+IMAGE_CRAB3 = "images/crab3.gif"
+IMAGE_CRAB4 = "images/crab4.gif"
+IMAGE_CRAB5 = "images/crab5.gif"
 IMAGE_WATER_SOURCE = "images/water_source.gif"
 IMAGE_LAND1 = "images/land1.gif"
 IMAGE_LAND2 = "images/land2.gif"

@@ -14,6 +14,8 @@ class World():
         self.world_width = world_width
         self.world_height = world_height
         self.grid = []
+        self.elevation_min = 0
+        self.elevation_max = 0
         self.generate_world(num_foods, num_water_sources)
 
     def get_food_level(self, row, col):
@@ -115,7 +117,7 @@ class World():
                 for col_num in range(self.world_width):
                     # Uses Perlin noise to generate elevation
                     # https://pypi.python.org/pypi/noise
-                    elev = (1.0 + noise.noise2(col_num / TERRAIN_SMOOTHNESS, row_num / TERRAIN_SMOOTHNESS)) * ELEVATION_MAX / 2
+                    elev = (1.0 + noise.noise2(col_num / TERRAIN_SMOOTHNESS, row_num / TERRAIN_SMOOTHNESS)) * 5.0 / 2
                     cell = LandCell(self, [row_num, col_num], elev)
                     row_list.append(cell)
                     index += 1
@@ -134,6 +136,15 @@ class World():
                     row_list.append(cell)
                     index += 1
                 self.grid.append(row_list)
+
+        # Calculate elevation extrema
+        for row_num in range(self.world_height):
+            for col_num in range(self.world_width):
+                c = self.grid[row_num][col_num]
+                if c.elevation < self.elevation_min:
+                    self.elevation_min = c.elevation
+                if c.elevation > self.elevation_max:
+                    self.elevation_max = c.elevation
 
         # write to a dump file
         if False:

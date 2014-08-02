@@ -39,7 +39,11 @@ class UI():
     ######### RENDERING CODE
     def canvas_allocate_images(self):
         self.world_images = {
-            IMAGE_CRAB: PhotoImage(file=IMAGE_CRAB),
+            IMAGE_CRAB1: PhotoImage(file=IMAGE_CRAB1),
+            IMAGE_CRAB2: PhotoImage(file=IMAGE_CRAB2),
+            IMAGE_CRAB3: PhotoImage(file=IMAGE_CRAB3),
+            IMAGE_CRAB4: PhotoImage(file=IMAGE_CRAB4),
+            IMAGE_CRAB5: PhotoImage(file=IMAGE_CRAB5),
             IMAGE_WATER_SOURCE: PhotoImage(file=IMAGE_WATER_SOURCE),
             IMAGE_ARABLE_LAND: PhotoImage(file=IMAGE_ARABLE_LAND),
             IMAGE_LAND1: PhotoImage(file=IMAGE_LAND1),
@@ -88,55 +92,70 @@ class UI():
     def canvas_get_image(self, image_key):
         return self.world_images[image_key]
 
-    def canvas_get_crabimage(self):
-        crab_image = self.canvas_get_image(IMAGE_CRAB)
+    def canvas_get_crabimage(self, health):
+        if health < 0.2 * MAX_HEALTH:
+            crab_image = self.canvas_get_image(IMAGE_CRAB1)
+        elif health < 0.4 * MAX_HEALTH:
+            crab_image = self.canvas_get_image(IMAGE_CRAB2)
+        elif health < 0.6 * MAX_HEALTH:
+            crab_image = self.canvas_get_image(IMAGE_CRAB3)
+        elif health < 0.8 * MAX_HEALTH:
+            crab_image = self.canvas_get_image(IMAGE_CRAB4)
+        else:
+            crab_image = self.canvas_get_image(IMAGE_CRAB5)
         return crab_image
 
     def canvas_get_landimage(self, elevation):
         land_image = None
-        if 0 < elevation <= 0.5:
+        world = self.simulation.world
+        elev_min = world.elevation_min
+        elev_max = world.elevation_max
+        elev_range = elev_max - elev_min
+        if elev_min * 0.0/10 < elevation <= elev_min + elev_range * 1.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND1)
-        elif 0.5 < elevation <= 1.0:
+        elif elev_min * 1.0/10 <= elevation <= elev_min + elev_range * 2.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND2)
-        elif 1.0 < elevation <= 1.5:
+        elif elev_min * 2.0/10 <= elevation <= elev_min + elev_range * 3.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND3)
-        elif 1.5 < elevation <= 2.0:
+        elif elev_min * 3.0/10 <= elevation <= elev_min + elev_range * 4.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND4)
-        elif 2.0 < elevation <= 2.5:
+        elif elev_min * 4.0/10 <= elevation <= elev_min + elev_range * 5.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND5)
-        elif 2.5 < elevation <= 3.0:
+        elif elev_min * 5.0/10 <= elevation <= elev_min + elev_range * 6.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND6)
-        elif 3.0 < elevation <= 3.5:
+        elif elev_min * 6.0/10 <= elevation <= elev_min + elev_range * 7.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND7)
-        elif 3.5 < elevation <= 4.0:
+        elif elev_min * 7.0/10 <= elevation <= elev_min + elev_range * 8.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND8)
-        elif 4.0 < elevation <= 4.5:
+        elif elev_min * 8.0/10 <= elevation <= elev_min + elev_range * 9.0/10:
             land_image = self.canvas_get_image(IMAGE_LAND9)
-        elif 4.5 < elevation:
+        elif elev_min * 9.0/10 <= elevation:
             land_image = self.canvas_get_image(IMAGE_LAND10)
         return land_image
 
     def canvas_get_waterimage(self, water_amount):
         watercell_image = None
-        if 0 < water_amount <= 0.1:
+        world = self.simulation.world
+        elev_range = 10
+        if 0.0/10 < water_amount <= elev_range * 1.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER1)
-        elif 0.1 < water_amount <= 0.2:
+        elif 1.0/10 < water_amount <= elev_range * 2.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER2)
-        elif 0.2 < water_amount <= 0.3:
+        elif 2.0/10 < water_amount <= elev_range * 3.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER3)
-        elif 0.3 < water_amount <= 0.4:
+        elif 3.0/10 < water_amount <= elev_range * 4.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER4)
-        elif 0.4 < water_amount <= 0.5:
+        elif 4.0/10 < water_amount <= elev_range * 5.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER5)
-        elif 0.5 < water_amount <= 0.6:
+        elif 5.0/10 < water_amount <= elev_range * 6.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER6)
-        elif 0.6 < water_amount <= 0.7:
+        elif 6.0/10 < water_amount <= elev_range * 7.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER7)
-        elif 0.7 < water_amount <= 0.8:
+        elif 7.0/10 < water_amount <= elev_range * 8.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER8)
-        elif 0.8 < water_amount <= 0.9:
+        elif 8.0/10 < water_amount <= elev_range * 9.0/10:
             watercell_image = self.canvas_get_image(IMAGE_WATER9)
-        elif 0.9 < water_amount:
+        elif 9.0/10 < water_amount:
             watercell_image = self.canvas_get_image(IMAGE_WATER10)
         return watercell_image
 
@@ -192,12 +211,12 @@ class UI():
         cell_id = self.canvas.create_image(col_num*CELL_SIZE+offset, row_num*CELL_SIZE+offset, anchor=NW, image=image)
         return cell_id
 
-    def canvas_create_crab_item(self, row_num, col_num):
+    def canvas_create_crab_item(self, row_num, col_num, health):
         key = (row_num, col_num)
         if key in self.crab_id_dict:
             self.canvas.delete(self.crab_id_dict[key])
-        crab_image = self.canvas_get_crabimage()
-        crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset=2)
+        crab_image = self.canvas_get_crabimage(health)
+        crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset= (10 - health) / 2)
         self.crab_id_dict[key] = crab_id
 
     def canvas_create_land_item(self, row_num, col_num, elevation):
@@ -276,7 +295,7 @@ class UI():
 
                 # Update crab overlay
                 if cell.get_crab():
-                    self.canvas_create_crab_item(row_num, col_num)
+                    self.canvas_create_crab_item(row_num, col_num, cell.get_crab().health)
 
                 # Update plants
                 if isinstance(cell, ArableLandCell):
