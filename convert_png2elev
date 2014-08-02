@@ -1,0 +1,52 @@
+#! /bin/csh -fvx
+#
+# This script provides the workflow to merge 3 PNG's obtained 
+# via ArcView with the help of Lisa Low into a simple ascii
+# table for input into BaySim. 
+# Some numbers are hardcoded here, as well as in BaySim
+# e.g. sizes 74x99 of the final map
+#
+
+if (0) then
+   fitsccd ChesapeakeBayDepth.fits - | ccdslice - map1 z 1
+   fitsccd LandElevation.fits - blank=255 | ccdslice - map2 z 1
+   
+endif
+rm -f map123
+
+# low
+set a1=-52.933
+set a2=-5
+set a3=100
+
+# high (not used)
+set b1=1.577
+set b2=100
+set b3=300
+
+# offset 
+set d1=54.91
+set d2=105
+set d3=200
+
+#  combining is tricky , since we didn't write the intensity values 
+#  neither do we know the greyscale lookup table
+#  map1 (sea level) -                       255 is undef   0 is about -50m
+#  map2 (land -5 .. 100)                      0 is undef   0 is about -5m
+#  map3 (land 100 .. 500, or was it 200)      0 is undef   0 is about 100m
+
+ccdmath \
+    map1,map2,map3 \
+    map123 \
+    "ifne(%1,255,$d1*%1/255+$a1,ifne(%2,0,%2*$d2/255+$a2,ifne(%3,0,%3*$d3/255+$a3,0)))"
+
+
+#    "ifeq(%1,255,ifeq(%2,0,%3*$d3/255+$a3,ifeq(%3,0,%2*$d2/255+$a2,0)),$d1*%1/255+$a1)"
+
+# go from 1645 x 1188 -> 881 x 1188
+ccdsub map123 map123c x=400:1280
+ccdfill map123c map123d m=4
+ccdfill map123d map123e 
+ccdsub map123e map123f nxaver=12 nyaver=12
+ccdsub map123f map123g 1:881:12 1:1188:12
+ccdmath map123g map123h "ifeq(%1,0,999,%1)"
