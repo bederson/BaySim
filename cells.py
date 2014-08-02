@@ -20,7 +20,7 @@ class LandCell(object):
         self.world = world
         self.location = location     # (row, col)
         self.elevation = elevation
-        self.water_level = 0.0
+        self.water_level = INIT_WATER_LEVEL - elevation
 
     def __str__(self):
         """
