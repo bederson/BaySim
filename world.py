@@ -79,7 +79,11 @@ class World():
                             else:
                                 amount_pollution_to_move = cell.pollution / 4
                                 neighbor.pollution += amount_pollution_to_move
+                                if neighbor.pollution > MAX_POLLUTION:
+                                    neighbor.pollution = MAX_POLLUTION
                                 cell.pollution -= amount_pollution_to_move
+                                if cell.pollution < 0:
+                                    cell.pollution = 0
 
                 # Evaporate water
                 if cell.water_level > 0:
@@ -92,11 +96,7 @@ class World():
                 # Process crabs
                 crab = cell.get_crab()
                 if crab:
-                    loc = crab.find_best_nearby_cell(self)
-                    cell.crab = None
-                    crab.location = loc
-                    new_cell = self.get_cell(loc[ROW_INDEX], loc[COL_INDEX])
-                    new_cell.crab = crab
+                    crab.step(cell, self)
 
     def generate_world(self, num_foods, num_water_sources):
         """

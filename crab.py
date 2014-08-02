@@ -8,7 +8,7 @@ class Crab():
     """
     def __init__(self, location):
         self.location = location
-        self.health = random.random() * MAX_HEALTH
+        self.health = self.init_health()
 
     #### Getters / Setters
     def get_location(self):
@@ -16,6 +16,9 @@ class Crab():
 
     def set_location(self, loc):
         self.location = loc
+
+    def init_health(self):
+        return random.random() * MAX_HEALTH / 2.0
 
     def good_move(self, loc, world):
         """
@@ -52,3 +55,34 @@ class Crab():
         loc = self.get_random_direction(world)
 
         return loc
+
+    def step(self, cell, world):
+        self.move(cell, world)
+
+        if cell.pollution > 0:
+            self.health -= cell.pollution
+        else:
+            self.health += 0.1
+
+        if self.health <= 0:
+            self.die(cell)
+        elif self.health > MAX_HEALTH:
+            self.spawn(world)
+
+    def move(self, cell, world):
+        new_loc = self.find_best_nearby_cell(world)
+        cell.crab = None
+        self.location = new_loc
+        new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
+        new_cell.crab = self
+
+    def die(self, cell):
+        cell.crab = None
+
+    def spawn(self, world):
+        self.health = self.init_health()
+        new_loc = self.get_random_direction(world)
+        new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
+        if not new_cell.crab:
+            new_crab = Crab(new_loc)
+            new_cell.crab = new_crab
