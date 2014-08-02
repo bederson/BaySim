@@ -13,6 +13,7 @@ class UI():
         self.creature_meter_id = None
         self.cell_id_dict = {}
         self.watercell_id_dict = {}
+        self.pollutioncell_id_dict = {}
         self.plant_id_dict = {}
         self.text_id_dict = {}
 
@@ -43,7 +44,7 @@ class UI():
     # Gets called by simulation when world changes
     def world_handler(self):
         self.canvas_update_creature_meter()
-        self.canvas_update_water_and_plant()
+        self.canvas_update_water_pollution_and_plant()
 
     # Gets called by simulation when creature changes
     def creature_handler(self, original_location, new_location):
@@ -90,6 +91,16 @@ class UI():
             IMAGE_WATER8: PhotoImage(file=IMAGE_WATER8),
             IMAGE_WATER9: PhotoImage(file=IMAGE_WATER9),
             IMAGE_WATER10: PhotoImage(file=IMAGE_WATER10),
+            IMAGE_POLLUTION1: PhotoImage(file=IMAGE_POLLUTION1),
+            IMAGE_POLLUTION2: PhotoImage(file=IMAGE_POLLUTION2),
+            IMAGE_POLLUTION3: PhotoImage(file=IMAGE_POLLUTION3),
+            IMAGE_POLLUTION4: PhotoImage(file=IMAGE_POLLUTION4),
+            IMAGE_POLLUTION5: PhotoImage(file=IMAGE_POLLUTION5),
+            IMAGE_POLLUTION6: PhotoImage(file=IMAGE_POLLUTION6),
+            IMAGE_POLLUTION7: PhotoImage(file=IMAGE_POLLUTION7),
+            IMAGE_POLLUTION8: PhotoImage(file=IMAGE_POLLUTION8),
+            IMAGE_POLLUTION9: PhotoImage(file=IMAGE_POLLUTION9),
+            IMAGE_POLLUTION10: PhotoImage(file=IMAGE_POLLUTION10),
             IMAGE_BUILDING: PhotoImage(file=IMAGE_BUILDING)
         }
 
@@ -156,6 +167,30 @@ class UI():
             watercell_image = self.canvas_get_image(IMAGE_WATER10)
         return watercell_image
 
+    def canvas_get_pollutionimage(self, pollution_amount):
+        pollutioncell_image = None
+        if 0 < pollution_amount <= 0.1:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION1)
+        elif 0.1 < pollution_amount <= 0.2:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION2)
+        elif 0.2 < pollution_amount <= 0.3:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION3)
+        elif 0.3 < pollution_amount <= 0.4:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION4)
+        elif 0.4 < pollution_amount <= 0.5:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION5)
+        elif 0.5 < pollution_amount <= 0.6:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION6)
+        elif 0.6 < pollution_amount <= 0.7:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION7)
+        elif 0.7 < pollution_amount <= 0.8:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION8)
+        elif 0.8 < pollution_amount <= 0.9:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION9)
+        elif 0.9 < pollution_amount:
+            pollutioncell_image = self.canvas_get_image(IMAGE_POLLUTION10)
+        return pollutioncell_image
+
     def canvas_get_plantimage(self, plant_amount):
         plant_image = None
         if 0 < plant_amount <= 0.1:
@@ -218,6 +253,15 @@ class UI():
         self.watercell_id_dict[key] = water_id
         return water_id
 
+    def canvas_create_pollutioncell(self, row_num, col_num, pollution_level):
+        pollution_image = self.canvas_get_pollutionimage(pollution_level)
+        pollution_id = self.canvas_create_cell(row_num, col_num, pollution_image)
+        key = (row_num, col_num)
+        if key in self.pollutioncell_id_dict:
+            self.canvas.delete(self.pollutioncell_id_dict[key])
+        self.pollutioncell_id_dict[key] = pollution_id
+        return pollution_id
+
     def canvas_create_plantcell(self, row_num, col_num, plant_level):
         plant_image = self.canvas_get_plantimage(plant_level)
         plant_id = self.canvas_create_cell(row_num, col_num, plant_image)
@@ -272,11 +316,15 @@ class UI():
         else:
             self.canvas.coords(self.creature_meter_id, x1, y1, x2, y2)
 
-    def canvas_update_water_and_plant(self):
+    def canvas_update_water_pollution_and_plant(self):
         for row_num, row in enumerate(self.simulation.world.grid):
             for col_num, cell in enumerate(row):
                 if isinstance(cell, WaterSourceCell):
                     continue
+                if isinstance(cell, BuildingCell):
+                    continue
+
+                # Update water overlay
                 water_level = cell.get_water_level()
                 key = (row_num, col_num)
                 if key in self.watercell_id_dict:
@@ -285,6 +333,16 @@ class UI():
                     watercell_image = self.canvas_get_waterimage(water_level)
                     watercell_id = self.canvas.create_image(col_num * CELL_SIZE, row_num * CELL_SIZE, anchor=NW, image=watercell_image)
                     self.watercell_id_dict[(row_num, col_num)] = watercell_id
+
+                # Update pollution overlay
+                pollution_level = cell.get_pollution_level()
+                key = (row_num, col_num)
+                if key in self.pollutioncell_id_dict:
+                    self.canvas.delete(self.pollutioncell_id_dict[key])
+                if pollution_level > 0:
+                    pollutioncell_image = self.canvas_get_pollutionimage(pollution_level)
+                    pollutioncell_id = self.canvas.create_image(col_num * CELL_SIZE, row_num * CELL_SIZE, anchor=NW, image=pollutioncell_image)
+                    self.pollutioncell_id_dict[(row_num, col_num)] = pollutioncell_id
                 else:
                     if isinstance(cell, ArableLandCell):
                         plant_level = cell.get_food_level()

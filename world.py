@@ -51,8 +51,8 @@ class World():
         # Iterate over cells
         for row_num, row in enumerate(self.grid):
             for col_num, cell in enumerate(row):
+                # If cell has or generates water, then iterate over neighbors
                 if cell.water_level > 0 or isinstance(cell, WaterSourceCell):
-                    # If cell has water, then iterate over neighbors
                     for neighbor in cell.neighbors(include_water=True):
                         amount_water_to_move = 0
                         if isinstance(cell, WaterSourceCell):
@@ -67,6 +67,17 @@ class World():
                                 amount_water_to_move = cell.water_level
                             neighbor.water_level += amount_water_to_move
                             cell.water_level -= amount_water_to_move
+
+                # If cell has or generates pollution, then iterate over neighbors
+                if cell.pollution > 0 or isinstance(cell, BuildingCell):
+                    for neighbor in cell.neighbors(include_water=True):
+                        if neighbor.get_elevation() < cell.get_elevation():
+                            if isinstance(cell, BuildingCell):
+                                neighbor.pollution = cell.runoff_gen
+                            else:
+                                amount_pollution_to_move = cell.pollution / 4
+                                neighbor.pollution += amount_pollution_to_move
+                                cell.pollution -= amount_pollution_to_move
 
                 # Evaporate water
                 if cell.water_level > 0:
