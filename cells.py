@@ -22,23 +22,7 @@ class LandCell(object):
         self.elevation = elevation
         self.water_level = INIT_WATER_LEVEL - elevation
         self.pollution = 0
-
-    def __str__(self):
-        """
-        __str__() -> String
-        Debugging utility to return a string representing this cell.
-        """
-        return self.desc() + " | "
-
-    def desc(self):
-        """
-        desc() -> String
-        Utility used by __str__ in generating the string description of this cell.
-        """
-        return("location=" + str(self.location) +
-               "; elevation=" + str(self.elevation) +
-               "; water level=" + str(self.water_level)
-               )
+        self.crab = None
 
     #### Getters / Setters
     def get_location(self):
@@ -64,6 +48,9 @@ class LandCell(object):
 
     def get_pollution_level(self):
         return self.pollution
+
+    def get_crab(self):
+        return self.crab
 
     def add_to_water_level(self, amount):
         """
