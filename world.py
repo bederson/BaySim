@@ -153,7 +153,7 @@ class World():
                     c = self.grid[row_num][col_num]
                     print row_num, col_num, c.elevation
 
-        # Replace some cells with buildings
+        # Add some buildings (replace some cells with buildings)
         num_buildings = NUM_BUILDINGS
         while num_buildings > 0:
             row_num = random.randint(0, self.world_height - 1)
@@ -165,18 +165,18 @@ class World():
                 self.grid[row_num][col_num] = building_cell
                 num_buildings -= 1
 
-        # Replace some cells with plants
+        # Add some plants (replace some cells with plants)
         while num_foods > 0:
             row_num = random.randint(0, self.world_height - 1)
             col_num = random.randint(0, self.world_width - 1)
             cell = self.grid[row_num][col_num]
             elevation = cell.get_elevation()
-            if INIT_WATER_LEVEL < elevation:
+            if INIT_WATER_LEVEL < elevation < self.elevation_max - 1:
                 plant_cell = ArableLandCell(self, [row_num, col_num], elevation)
                 self.grid[row_num][col_num] = plant_cell
                 num_foods -= 1
 
-        # Replace some cells with water
+        # Add water sources (replace some cells with water)
         for water_source_loc in WATER_SOURCES:
             row_num = water_source_loc[ROW_INDEX]
             col_num = water_source_loc[COL_INDEX]
