@@ -46,9 +46,10 @@ class Simulation():
 
         # Move the creature
         if self.creature_num_skip_steps > 0:
-            # Auto-move creature
+            # Don't move the creature this step
             self.creature_num_skip_steps -= 1
         else:
+            # Auto-move creature
             original_location = self.creature.get_location()
             new_location = self.creature.find_best_nearby_cell(self.world)
             if new_location:

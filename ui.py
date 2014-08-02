@@ -18,7 +18,6 @@ class UI():
 
     ######## HANDLER CODE
     def init_handlers(self):
-        self.simulation.delay_creature_auto_movement()
         self.create_event_timer()
         self.canvas.bind_all('<KeyPress>', self.key_handler)
         self.simulation.add_world_handler(self.world_handler)
