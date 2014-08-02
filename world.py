@@ -65,8 +65,7 @@ class World():
         a bit of water, flowing all the water down hill one step, and evaporating the water a bit.
         """
         self.add_water_to_sources()
-        self.flow_water()
-        self.evaporate_water()
+        self.process_water()
         self.apply_water_delta()
 
     def add_water_to_sources(self):
@@ -80,9 +79,9 @@ class World():
                 if isinstance(cell, WaterSourceCell):
                     cell.add_to_water_level(WATER_SOURCE_FLOW)
 
-    def flow_water(self):
+    def process_water(self):
         """
-        flow_water() -> None
+        process_water() -> None
         This performs one step of the water flow algorithm, flowing water a bit from
         every cell that has water to neighboring cells that have lower water levels.
         Rather than directly modifying the cells' water levels, this calculates how
@@ -121,18 +120,7 @@ class World():
                             self.water_delta[neighbor_row][neighbor_col] += amount_water_to_move
                             water_flowed_from_cell += amount_water_to_move
 
-    def evaporate_water(self):
-        """
-        evaporate_water() -> None
-        Every cell that has water is evaporated a little bit.
-        Specifically, every cell that has water is reduced by EVAPORATION_RATE.
-        This method doesn't actually reduce the water level in the cells, but
-        rather modifies the <water_delta> table that is used later to actually
-        reduce the cells' water level.
-        """
-        for row_num, row in enumerate(self.grid):
-            for col_num, cell in enumerate(row):
-                if cell.water_level > 0:
+                if cell.water_level + self.water_delta[row_num][col_num] > 0:
                     self.water_delta[row_num][col_num] -= EVAPORATION_RATE
 
     def apply_water_delta(self):
