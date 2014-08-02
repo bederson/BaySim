@@ -1,8 +1,6 @@
 from world import World
 from creature import Creature
-from constants import *
 from cells import *
-from path_search import PathSearch
 
 
 def neighbors(cell):
@@ -70,43 +68,11 @@ class Simulation():
             # Auto-move creature
             self.creature_num_skip_steps -= 1
         else:
-            # Initialization stuff
             original_location = self.creature.get_location()
-            path_search = PathSearch(neighbors)
-            # Figure out where the creature should move to
-            best_neighbor = self.creature.find_best_nearby_cell(self.world, METRIC_TYPE)
-            goal = self.world.get_cell(best_neighbor[ROW_INDEX], best_neighbor[COL_INDEX])
-            creature_loc = self.creature.get_location()
-            creature_cell = self.world.get_cell(creature_loc[ROW_INDEX], creature_loc[COL_INDEX])
-            # Then use "path search" to determine how to get there
-            path = path_search.search(creature_cell, goal)
-
-            """
-            UNCOMMENT THE NEXT LINE to print debugging info about how the creature moves
-            """
-            # self.print_path_info(creature_cell, goal, path)
-
-            # Act on the path - i.e., move and eat
-            # But make sure the path is at least 2 nodes long,
-            # otherwise just stay where we are.
-            if len(path) <= 1:
-                new_location = original_location
-            else:
-                new_location = path[1].get_location()
+            new_location = self.creature.find_best_nearby_cell(self.world)
             if new_location:
                 self.creature.set_location(new_location)
                 self.creature.eat(self.world)
 
             self.creature_num_skip_steps = DEFAULT_NUM_CREATURE_STEPS_TO_SKIP
             self.fire_creature_handler(original_location, new_location)
-
-    def print_path_info(self, creature_cell, goal, path):
-        """
-        Debugging method to print information about the creature's movement.
-        """
-        print "creature: " + str(creature_cell)
-        print "goal: " + str(goal)
-        print "path:"
-        for c in path:
-            print "    " + str(c)
-        print ""

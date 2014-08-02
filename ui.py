@@ -53,12 +53,6 @@ class UI():
             self.canvas_move_creature(original_location, new_location)
             self.canvas_update_creature_meter()
 
-        # Check if Creature died, handle game over
-        if self.simulation.creature.hunger_level >= LEVEL_MAX:
-            self.canvas.create_rectangle(CELL_SIZE, CELL_SIZE, CELL_SIZE + 200, CELL_SIZE + 50, outline='gray', fill='orange')
-            self.canvas.create_text(1.5*CELL_SIZE, 1.25*CELL_SIZE, anchor=NW,  font=("times", 30), text="Game Over")
-            self.root.after(GAMEOVER_CLOSE_COUNTDOWN, self.root.destroy)
-
     ######### RENDERING CODE
     def canvas_allocate_images(self):
         self.world_images = {
