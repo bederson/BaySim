@@ -3,16 +3,13 @@ ROW_INDEX = 0
 COL_INDEX = 1
 
 # Initial values
-WORLD_DIM = 100
+WORLD_WIDTH = 70
+WORLD_HEIGHT = 100
 CELL_SIZE = 8
-NUM_FOODS = 10
-NUMBER_OF_WATER_SOURCES = 2
+NUM_FOODS = 100
+NUM_WATER_SOURCES = 10
+NUM_BUILDINGS = 100
 INIT_HUNGER = 0
-START_LOCATION = [50, 50]
-
-# Debugging constants (only set one to True at a time)
-DEBUG_ELEVATION = False
-DEBUG_WATER_LEVEL = False
 
 # Simulation constants
 TERRAIN_SMOOTHNESS = 50.0           # Bigger values makes the terrain smoother
@@ -35,8 +32,6 @@ DIRECTION_DELTAS = {
 }
 
 # Visual Display constants
-TEXT_OFFSET = 3
-WATER_TEXT_OFFSET = 16
 METER_HEIGHT = 5
 
 # Image filenames
@@ -76,3 +71,4 @@ IMAGE_WATER7 = "images/water7.gif"
 IMAGE_WATER8 = "images/water8.gif"
 IMAGE_WATER9 = "images/water9.gif"
 IMAGE_WATER10 = "images/water10.gif"
+IMAGE_BUILDING = "images/building.gif"

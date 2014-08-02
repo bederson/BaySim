@@ -90,6 +90,7 @@ class UI():
             IMAGE_WATER8: PhotoImage(file=IMAGE_WATER8),
             IMAGE_WATER9: PhotoImage(file=IMAGE_WATER9),
             IMAGE_WATER10: PhotoImage(file=IMAGE_WATER10),
+            IMAGE_BUILDING: PhotoImage(file=IMAGE_BUILDING)
         }
 
     def canvas_get_image(self, image_key):
@@ -199,6 +200,15 @@ class UI():
         self.cell_id_dict[key] = land_id
         return land_image
 
+    def canvas_create_buildingcell(self, row_num, col_num, elevation):
+        building_image = self.canvas_get_image(IMAGE_BUILDING)
+        building_id = self.canvas_create_cell(row_num, col_num, building_image)
+        key = (row_num, col_num)
+        if key in self.cell_id_dict:
+            self.canvas.delete(self.cell_id_dict[key])
+        self.cell_id_dict[key] = building_id
+        return building_image
+
     def canvas_create_watercell(self, row_num, col_num, water_level):
         water_image = self.canvas_get_waterimage(water_level)
         water_id = self.canvas_create_cell(row_num, col_num, water_image)
@@ -221,17 +231,13 @@ class UI():
         for row_num, row in enumerate(self.simulation.world.grid):
             for col_num, cell in enumerate(row):
                 elevation = cell.get_elevation()
-                self.canvas_create_landcell(row_num, col_num, elevation)
+                if isinstance(cell, BuildingCell):
+                    self.canvas_create_buildingcell(row_num, col_num, elevation)
+                else:
+                    self.canvas_create_landcell(row_num, col_num, elevation)
                 if isinstance(cell, WaterSourceCell):
                     watersource_image = self.canvas_get_image(IMAGE_WATER_SOURCE)
                     self.canvas_create_cell(row_num, col_num, watersource_image)
-
-                if DEBUG_ELEVATION:
-                    elev_str = str(elevation)[0:3]
-                else:
-                    elev_str = ""
-                text_id = self.canvas.create_text(CELL_SIZE * col_num + TEXT_OFFSET, CELL_SIZE * row_num, anchor=NW, fill='black', text=elev_str)
-                self.text_id_dict[(row_num, col_num)] = text_id
 
         creature_loc = self.simulation.creature.get_location()
         creature_row = creature_loc[ROW_INDEX]
@@ -289,19 +295,10 @@ class UI():
                             plant_id = self.canvas.create_image(col_num * CELL_SIZE, row_num * CELL_SIZE, anchor=NW, image=plant_image)
                             self.plant_id_dict[(row_num, col_num)] = plant_id
 
-                if DEBUG_WATER_LEVEL:
-                    water_str = ""
-                    if water_level > 0:
-                        water_str = str(water_level)[:3]
-                    cell_id = (row_num, col_num)
-                    text_id = self.text_id_dict[cell_id]
-                    self.canvas.itemconfig(text_id, text=water_str)
-                    self.canvas.tag_raise(text_id)
-
-    def init_simulation(self, size=WORLD_DIM * CELL_SIZE):
+    def init_simulation(self, world_width=WORLD_WIDTH * CELL_SIZE, world_height=WORLD_HEIGHT * CELL_SIZE):
         self.root = Tk()
         self.root.wm_title("BaySim")
-        canvas = Canvas(self.root, width=size, height=size)
+        canvas = Canvas(self.root, width=world_width, height=world_height)
         canvas.pack(fill="both", expand=1)
         self.root.wait_visibility(self.root)
         self.canvas = canvas

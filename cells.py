@@ -89,7 +89,7 @@ class LandCell(object):
         for delta in DIRECTION_DELTAS.values():
             row = self.location[ROW_INDEX] + delta[ROW_INDEX]
             col = self.location[COL_INDEX] + delta[COL_INDEX]
-            if (col >= 0) and (col < self.world.get_dim()) and (row >= 0) and (row < self.world.get_dim()):
+            if (col >= 0) and (col < self.world.get_dim()[0]) and (row >= 0) and (row < self.world.get_dim()[1]):
                 cell = self.world.get_cell(row, col)
                 if include_water or cell.get_water_level() == 0:
                     cells.append(cell)
@@ -109,6 +109,7 @@ class ArableLandCell(LandCell):
         It initializes the plant instance variable by calling the reset_food_level() method.
         """
         LandCell.__init__(self, world, location, elevation)
+        self.plant = 0
         self.reset_food_level()
 
     def desc(self):
@@ -181,3 +182,12 @@ class WaterSourceCell(LandCell):
         It initializes the water_level instance variable with the specified argument.
         """
         LandCell.__init__(self, world, location, elevation)
+
+
+class BuildingCell(LandCell):
+    """
+    Buildings are bad, then can produce runoff
+    """
+    def __init__(self, world, location, elevation):
+        LandCell.__init__(self, world, location, elevation)
+        self.runoff_gen = random()

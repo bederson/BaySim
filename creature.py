@@ -43,7 +43,7 @@ class Creature():
         """
         loc_row = loc[ROW_INDEX]
         loc_col = loc[COL_INDEX]
-        if (loc_row >= 0) and (loc_row < world.get_dim()) and (loc_col >= 0) and (loc_col < world.get_dim()):
+        if (loc_row >= 0) and (loc_row < world.get_dim()[1]) and (loc_col >= 0) and (loc_col < world.get_dim()[0]):
             cell = world.get_cell(loc_row, loc_col)
             if cell.get_water_level() <= 0:
                 return True

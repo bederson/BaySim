@@ -1,18 +1,19 @@
-from constants import *
-from cells import LandCell, WaterSourceCell, ArableLandCell
 from perlin import SimplexNoise
-from unique_rands import unique_rands
+from creature import *
+import random
 
 
 class World():
-    def __init__(self, world_dim=WORLD_DIM, num_foods=NUM_FOODS, num_water_sources=NUMBER_OF_WATER_SOURCES):
+    def __init__(self, world_width=WORLD_WIDTH, world_height=WORLD_HEIGHT, num_foods=NUM_FOODS, num_water_sources=NUM_WATER_SOURCES):
         """
         __init__(int, int, int) -> None
         Constructor initializes the world with the dimensions of the world, and then generates
         a world grid with the specified number of foods, and number of water sources.
         """
-        self.world_dim = world_dim
+        self.world_width = world_width
+        self.world_height = world_height
         self.grid = []
+        self.creature = None
         self.generate_world(num_foods, num_water_sources)
 
     def get_food_level(self, row, col):
@@ -51,11 +52,10 @@ class World():
 
     def get_dim(self):
         """
-        get_dim() -> int
-        Returns the dimensions of the world as a single integer. Since the world is square,
-        the returned dimension represents both the width and height of the world.
+        get_dim() -> (int, int)
+        Returns the dimensions of the world as a tuple.
         """
-        return self.world_dim
+        return (self.world_width, self.world_height)
 
     def step_water(self):
         for row_num, row in enumerate(self.grid):
@@ -89,24 +89,61 @@ class World():
         # Fill grid cells - picking the specified number of food and water sources
         noise = SimplexNoise()
         noise.randomize(16)
-        num_special_cells = num_foods + num_water_sources
-        special_cell_indices = unique_rands(num_special_cells, self.world_dim * self.world_dim - 1)
-        food_indices = special_cell_indices[:num_foods]
-        water_indices = special_cell_indices[num_foods:]
 
+        # First generate world full of plain land cells
         index = 0
-        for row_num in range(self.world_dim):
+        for row_num in range(self.world_height):
             row_list = []
-            for col_num in range(self.world_dim):
+            for col_num in range(self.world_width):
                 # Uses Perlin noise to generate elevation
                 # https://pypi.python.org/pypi/noise
                 elev = (1.0 + noise.noise2(col_num / TERRAIN_SMOOTHNESS, row_num / TERRAIN_SMOOTHNESS)) * ELEVATION_MAX / 2
-                if index in food_indices:
-                    cell = ArableLandCell(self, [row_num, col_num], elev)
-                elif index in water_indices:
-                    cell = WaterSourceCell(self, [row_num, col_num], elev)
-                else:
-                    cell = LandCell(self, [row_num, col_num], elev)
+                cell = LandCell(self, [row_num, col_num], elev)
                 row_list.append(cell)
                 index += 1
             self.grid.append(row_list)
+
+        # Replace some cells with buildings
+        num_buildings = NUM_BUILDINGS
+        while num_buildings > 0:
+            row_num = random.randint(0, self.world_height - 1)
+            col_num = random.randint(0, self.world_width - 1)
+            cell = self.grid[row_num][col_num]
+            elevation = cell.get_elevation()
+            if INIT_WATER_LEVEL < elevation < INIT_WATER_LEVEL + 1:
+                building_cell = BuildingCell(self, [row_num, col_num], elevation)
+                self.grid[row_num][col_num] = building_cell
+                num_buildings -= 1
+
+        # Replace some cells with plants
+        while num_foods > 0:
+            row_num = random.randint(0, self.world_height - 1)
+            col_num = random.randint(0, self.world_width - 1)
+            cell = self.grid[row_num][col_num]
+            elevation = cell.get_elevation()
+            if INIT_WATER_LEVEL < elevation:
+                plant_cell = ArableLandCell(self, [row_num, col_num], elevation)
+                self.grid[row_num][col_num] = plant_cell
+                num_foods -= 1
+
+        # Replace some cells with water
+        while num_water_sources > 0:
+            row_num = random.randint(0, self.world_height - 1)
+            col_num = random.randint(0, self.world_width - 1)
+            cell = self.grid[row_num][col_num]
+            elevation = cell.get_elevation()
+            if INIT_WATER_LEVEL < elevation:
+                water_cell = WaterSourceCell(self, [row_num, col_num], elevation)
+                self.grid[row_num][col_num] = water_cell
+                num_water_sources -= 1
+
+        # Add the creature
+        num_creatures = 1
+        while num_creatures > 0:
+            row_num = random.randint(0, self.world_height - 1)
+            col_num = random.randint(0, self.world_width - 1)
+            cell = self.grid[row_num][col_num]
+            elevation = cell.get_elevation()
+            if INIT_WATER_LEVEL < elevation:
+                self.creature = Creature([row_num, col_num], INIT_HUNGER)
+                num_creatures -= 1

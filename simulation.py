@@ -8,9 +8,9 @@ def neighbors(cell):
 
 
 class Simulation():
-    def __init__(self, number_of_creatures=1, world_dim=WORLD_DIM, num_foods=NUM_FOODS, num_water_sources=NUMBER_OF_WATER_SOURCES, creature_location=START_LOCATION, creature_hunger_level=INIT_HUNGER):
-        self.world = World(world_dim, num_foods, num_water_sources)
-        self.creature = Creature(creature_location, creature_hunger_level)
+    def __init__(self, number_of_creatures=1, world_width=WORLD_WIDTH, world_height = WORLD_HEIGHT, num_foods=NUM_FOODS, num_water_sources=NUM_WATER_SOURCES):
+        self.world = World(world_width, world_height, num_foods, num_water_sources)
+        self.creature = self.world.creature
         self.creature_num_skip_steps = DEFAULT_NUM_CREATURE_STEPS_TO_SKIP
         self.world_handlers = []             # List of world handler callbacks
         self.creature_handlers = []          # List of creature handler callbacks
