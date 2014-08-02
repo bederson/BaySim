@@ -100,22 +100,38 @@ class World():
 
         # First generate world full of plain land cells
         index = 0
-        for row_num in range(self.world_height):
-            row_list = []
-            for col_num in range(self.world_width):
-                # Uses Perlin noise to generate elevation
-                # https://pypi.python.org/pypi/noise
-                elev = (1.0 + noise.noise2(col_num / TERRAIN_SMOOTHNESS, row_num / TERRAIN_SMOOTHNESS)) * ELEVATION_MAX / 2
-                cell = LandCell(self, [row_num, col_num], elev)
-                row_list.append(cell)
-                index += 1
-            self.grid.append(row_list)
+        if False:
+            for row_num in range(self.world_height):
+                row_list = []
+                for col_num in range(self.world_width):
+                    # Uses Perlin noise to generate elevation
+                    # https://pypi.python.org/pypi/noise
+                    elev = (1.0 + noise.noise2(col_num / TERRAIN_SMOOTHNESS, row_num / TERRAIN_SMOOTHNESS)) * ELEVATION_MAX / 2
+                    cell = LandCell(self, [row_num, col_num], elev)
+                    row_list.append(cell)
+                    index += 1
+                self.grid.append(row_list)
+        else:
+            lines = open('bay.elev').readlines()
+            nxy = self.world_height*self.world_width
+            if len(lines) != nxy:
+                print "bad file ",nxy,len(lines)
+            for row_num in range(self.world_height):
+                row_list = []
+                for col_num in range(self.world_width):
+                    # lines have X,Y,ELEV, for now we ignore X,Y and assume listed in the right order
+                    elev = float(lines[index].strip().split()[2])
+                    cell = LandCell(self, [row_num, col_num], elev)
+                    row_list.append(cell)
+                    index += 1
+                self.grid.append(row_list)
 
         # write to a dump file
-        for row_num in range(self.world_height):
-            for col_num in range(self.world_width):
-                c = self.grid[row_num][col_num]
-                print row_num, col_num, c.elevation
+        if False:
+            for row_num in range(self.world_height):
+                for col_num in range(self.world_width):
+                    c = self.grid[row_num][col_num]
+                    print row_num, col_num, c.elevation
 
         # Replace some cells with buildings
         num_buildings = NUM_BUILDINGS
