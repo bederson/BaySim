@@ -2,16 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="45d606ff-9879-42c6-bef9-761809ef3f25" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/path search/__init__.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/path search/grid.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/path search/path_search.py" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/path search/system.py" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/land10.gif" afterPath="$PROJECT_DIR$/images/land10.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/land5.gif" afterPath="$PROJECT_DIR$/images/land5.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/land6.gif" afterPath="$PROJECT_DIR$/images/land6.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/land7.gif" afterPath="$PROJECT_DIR$/images/land7.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/land8.gif" afterPath="$PROJECT_DIR$/images/land8.gif" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/images/land9.gif" afterPath="$PROJECT_DIR$/images/land9.gif" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ui.py" afterPath="$PROJECT_DIR$/ui.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/world.py" afterPath="$PROJECT_DIR$/world.py" />
     </list>
     <ignored path="BaySim.iws" />
@@ -35,11 +27,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="constants.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/constants.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1275">
+              <caret line="27" column="23" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ui.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ui.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="149" max-vertical-offset="4770">
-              <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+            <state vertical-scroll-proportion="-1.6923077" vertical-offset="3166" max-vertical-offset="4785">
+              <caret line="216" column="42" selection-start-line="216" selection-start-column="42" selection-end-line="216" selection-end-column="42" />
               <folding />
             </state>
           </provider>
@@ -48,8 +50,8 @@
       <file leaf-file-name="simulation.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/simulation.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="363" max-vertical-offset="945">
-              <caret line="53" column="74" selection-start-line="53" selection-start-column="74" selection-end-line="53" selection-end-column="74" />
+            <state vertical-scroll-proportion="-16.692308" vertical-offset="406" max-vertical-offset="945">
+              <caret line="58" column="45" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="45" />
               <folding />
             </state>
           </provider>
@@ -58,9 +60,21 @@
       <file leaf-file-name="world.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/world.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33676976" vertical-offset="1304" max-vertical-offset="2595">
-              <caret line="103" column="48" selection-start-line="103" selection-start-column="48" selection-end-line="103" selection-end-column="48" />
+            <state vertical-scroll-proportion="0.5575221" vertical-offset="840" max-vertical-offset="1695">
+              <caret line="80" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="cells.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/cells.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2835">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <element signature="e#0#25#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -68,18 +82,8 @@
       <file leaf-file-name="creature.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/creature.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="1125" max-vertical-offset="2145">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2115">
               <caret line="75" column="71" selection-start-line="75" selection-start-column="71" selection-end-line="75" selection-end-column="71" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="constants.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/constants.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1275">
-              <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -99,17 +103,17 @@
     <option name="changedFiles">
       <list>
         <option value="$PROJECT_DIR$/creature.py" />
-        <option value="$PROJECT_DIR$/constants.py" />
-        <option value="$PROJECT_DIR$/ui.py" />
         <option value="$PROJECT_DIR$/simulation.py" />
+        <option value="$PROJECT_DIR$/ui.py" />
+        <option value="$PROJECT_DIR$/constants.py" />
         <option value="$PROJECT_DIR$/world.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="196" />
+    <option name="x" value="368" />
     <option name="y" value="22" />
-    <option name="width" value="1239" />
+    <option name="width" value="1067" />
     <option name="height" value="874" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
@@ -335,7 +339,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="196" y="22" width="1239" height="874" extended-state="0" />
+    <frame x="368" y="22" width="1067" height="874" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -343,11 +347,11 @@
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32919255" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.14124294" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16730401" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22608696" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22506393" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -432,34 +436,44 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/cells.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2835">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#25#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/simulation.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.692308" vertical-offset="406" max-vertical-offset="945">
+          <caret line="58" column="45" selection-start-line="58" selection-start-column="43" selection-end-line="58" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/constants.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1275">
-          <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
+          <caret line="27" column="23" selection-start-line="27" selection-start-column="23" selection-end-line="27" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ui.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="149" max-vertical-offset="4770">
-          <caret line="20" column="0" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/simulation.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="363" max-vertical-offset="945">
-          <caret line="53" column="74" selection-start-line="53" selection-start-column="74" selection-end-line="53" selection-end-column="74" />
+        <state vertical-scroll-proportion="-1.6923077" vertical-offset="3166" max-vertical-offset="4785">
+          <caret line="216" column="42" selection-start-line="216" selection-start-column="42" selection-end-line="216" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/world.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33676976" vertical-offset="1304" max-vertical-offset="2595">
-          <caret line="103" column="48" selection-start-line="103" selection-start-column="48" selection-end-line="103" selection-end-column="48" />
+        <state vertical-scroll-proportion="0.5575221" vertical-offset="840" max-vertical-offset="1695">
+          <caret line="80" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
           <folding />
         </state>
       </provider>

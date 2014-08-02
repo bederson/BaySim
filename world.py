@@ -13,7 +13,6 @@ class World():
         """
         self.world_dim = world_dim
         self.grid = []
-        self.water_delta = []
         self.generate_world(num_foods, num_water_sources)
 
     def get_food_level(self, row, col):
@@ -59,82 +58,26 @@ class World():
         return self.world_dim
 
     def step_water(self):
-        """
-        step_water() -> None
-        Performs one step of the water simulation. This includes having each water source generate
-        a bit of water, flowing all the water down hill one step, and evaporating the water a bit.
-        """
-        self.add_water_to_sources()
-        self.process_water()
-        self.apply_water_delta()
-
-    def add_water_to_sources(self):
-        """
-        add_water_to_sources() -> None
-        This has each water source in the world generate a bit of water. Specifically,
-        the water level at WaterSourceCell is increased by the constant WATER_SOURCE_FLOW.
-        """
         for row_num, row in enumerate(self.grid):
             for col_num, cell in enumerate(row):
-                if isinstance(cell, WaterSourceCell):
-                    cell.add_to_water_level(WATER_SOURCE_FLOW)
+                if cell.water_level > 0 or isinstance(cell, WaterSourceCell):
+                    for neighbor in cell.neighbors(include_water=True):
+                        amount_water_to_move = 0
+                        if isinstance(cell, WaterSourceCell):
+                            if neighbor.get_elevation() < cell.get_elevation():
+                                neighbor.water_level = cell.get_elevation() - neighbor.get_elevation()
+                        else:
+                            cell_height_with_water = cell.elevation + cell.water_level
+                            neighbor_height_with_water = neighbor.elevation + neighbor.water_level
+                            if cell_height_with_water > neighbor_height_with_water:
+                                amount_water_to_move = (cell_height_with_water - neighbor_height_with_water) / 4.0
+                            if amount_water_to_move > cell.water_level:
+                                amount_water_to_move = cell.water_level
+                            neighbor.water_level += amount_water_to_move
+                            cell.water_level -= amount_water_to_move
 
-    def process_water(self):
-        """
-        process_water() -> None
-        This performs one step of the water flow algorithm, flowing water a bit from
-        every cell that has water to neighboring cells that have lower water levels.
-        Rather than directly modifying the cells' water levels, this calculates how
-        each cell's water level changes and stores that change in an instance variable
-        called self.water_delta which is a 2D grid of floats.  Later on, the
-        apply_water_delta() method is called for you which actually modifies the cell's
-        water level by adding or subtracting the calculated delta to the cell's
-        water level, so you should not do step #2 of the algorithm in the spec ("Apply deltas").
-
-        Note that the self.water_delta grid is guaranteed to have every value
-        initialized to 0 before this method is called and that you do not have
-        to do that initialization yourself.
-
-        Note that you must store the changes in the self.water_delta grid
-        instance variable. Do not make your own water_delta variable.
-
-        See the assignment for complete details.
-        """
-        for row_num, row in enumerate(self.grid):
-            for col_num, cell in enumerate(row):
-                water_flowed_from_cell = 0
-                for neighbor in cell.neighbors(include_water=True):
-                    avail_water_to_move = cell.water_level - water_flowed_from_cell
-                    if avail_water_to_move >= 0:
-                        neighbor_row = neighbor.get_location()[ROW_INDEX]
-                        neighbor_col = neighbor.get_location()[COL_INDEX]
-                        cell_height_with_water = cell.elevation + avail_water_to_move
-                        neighbor_height_with_water = neighbor.get_elevation() + neighbor.get_water_level() + self.water_delta[neighbor_row][neighbor_col]
-                        if cell_height_with_water > neighbor_height_with_water:
-                            amount_water_to_move = (cell_height_with_water - neighbor_height_with_water) / 2.0
-                            if amount_water_to_move > avail_water_to_move:
-                                amount_water_to_move = avail_water_to_move
-                            if amount_water_to_move > WATER_MAX_FLOW:
-                                amount_water_to_move = WATER_MAX_FLOW
-                            self.water_delta[row_num][col_num] -= amount_water_to_move
-                            self.water_delta[neighbor_row][neighbor_col] += amount_water_to_move
-                            water_flowed_from_cell += amount_water_to_move
-
-                if cell.water_level + self.water_delta[row_num][col_num] > 0:
-                    self.water_delta[row_num][col_num] -= EVAPORATION_RATE
-
-    def apply_water_delta(self):
-        """
-        apply_water_delta() -> None
-        This applies the <water_delta> table to the water level at every cell.
-        Specifically, for each cell in the world, this adds (or subtracts) the
-        amount of water in the <water_delta> table corresponding to that cell,
-        ensuring that the water level never goes below 0.
-        """
-        for row_num, row in enumerate(self.grid):
-            for col_num, cell in enumerate(row):
-                cell.add_to_water_level(self.water_delta[row_num][col_num])
-                self.water_delta[row_num][col_num] = 0.0
+                if cell.water_level > 0:
+                    cell.water_level -= EVAPORATION_RATE
 
     def generate_world(self, num_foods, num_water_sources):
         """
@@ -153,7 +96,6 @@ class World():
         index = 0
         for row_num in range(self.world_dim):
             row_list = []
-            delta_row_list = []
             for col_num in range(self.world_dim):
                 # Uses Perlin noise to generate elevation
                 # https://pypi.python.org/pypi/noise
@@ -165,7 +107,5 @@ class World():
                 else:
                     cell = LandCell(self, [row_num, col_num], elev)
                 row_list.append(cell)
-                delta_row_list.append(0.0)
                 index += 1
             self.grid.append(row_list)
-            self.water_delta.append(delta_row_list)

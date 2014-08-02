@@ -300,7 +300,7 @@ class UI():
 
     def init_simulation(self, size=WORLD_DIM * CELL_SIZE):
         self.root = Tk()
-        self.root.wm_title("HW 8")
+        self.root.wm_title("BaySim")
         canvas = Canvas(self.root, width=size, height=size)
         canvas.pack(fill="both", expand=1)
         self.root.wait_visibility(self.root)
@@ -308,6 +308,7 @@ class UI():
         self.canvas_allocate_images()
         self.init_handlers()
         self.canvas_create_world()
+        self.root.lift()
         self.root.mainloop()                # Enter Tk event loop
 
 sim = Simulation()
