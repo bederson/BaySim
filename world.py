@@ -84,6 +84,7 @@ class World():
         generate_world(int, int) -> None
         Initializes the world grid to a grid of cells with smoothly varying
         height and the specified number of randomly placed foods and water sources.
+        @todo read in a real bay model (@DataBay_MD)
         """
         # Fill grid cells - picking the specified number of food and water sources
         noise = SimplexNoise()
