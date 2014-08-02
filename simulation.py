@@ -38,11 +38,10 @@ class Simulation():
         # Update world
         updated_hunger = self.creature.get_hunger_level() + HUNGER_GROWTH
         self.creature.set_hunger_level(updated_hunger)
-        self.world.grow_all_food_level()
         self.fire_world_handler()
 
         # Process water
-        self.world.step_water()
+        self.world.step()
 
         # Move the creature
         if self.creature_num_skip_steps > 0:

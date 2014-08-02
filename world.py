@@ -26,16 +26,6 @@ class World():
         if isinstance(cell, ArableLandCell):
             return self.grid[row][col].get_food_level()
 
-    def grow_all_food_level(self):
-        """
-        grow_all_food_level() -> None
-        This grows all the food in the world at all ArableLandCell's one step.
-        """
-        for row_num, row in enumerate(self.grid):
-            for col_num, cell in enumerate(row):
-                if isinstance(cell, ArableLandCell):
-                    cell.grow()
-
     def get_cell(self, row, col):
         """
         get_cell(int, int) -> Cell
@@ -57,10 +47,12 @@ class World():
         """
         return (self.world_width, self.world_height)
 
-    def step_water(self):
+    def step(self):
+        # Iterate over cells
         for row_num, row in enumerate(self.grid):
             for col_num, cell in enumerate(row):
                 if cell.water_level > 0 or isinstance(cell, WaterSourceCell):
+                    # If cell has water, then iterate over neighbors
                     for neighbor in cell.neighbors(include_water=True):
                         amount_water_to_move = 0
                         if isinstance(cell, WaterSourceCell):
@@ -76,8 +68,13 @@ class World():
                             neighbor.water_level += amount_water_to_move
                             cell.water_level -= amount_water_to_move
 
+                # Evaporate water
                 if cell.water_level > 0:
                     cell.water_level -= EVAPORATION_RATE
+
+                # Grow plants
+                if isinstance(cell, ArableLandCell):
+                    cell.grow()
 
     def generate_world(self, num_foods, num_water_sources):
         """
