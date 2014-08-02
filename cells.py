@@ -173,7 +173,7 @@ class WaterSourceCell(LandCell):
     A subclass of LandCell, this defines a cell that generates water. That is, these cells
     produce water which then flows into neighboring cells.
     """
-    def __init__(self, world, location, elevation, water_level):
+    def __init__(self, world, location, elevation):
         """
         __init__(world, list, float, float) -> None
         Constructor for this class. It initializes the world, location and elevation
@@ -181,4 +181,3 @@ class WaterSourceCell(LandCell):
         It initializes the water_level instance variable with the specified argument.
         """
         LandCell.__init__(self, world, location, elevation)
-        self.water_level = float(water_level)

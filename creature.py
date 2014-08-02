@@ -8,10 +8,9 @@ class Creature():
     The creature class represents the creature in the world including its location,
     its hunger, and eye sight.
     """
-    def __init__(self, starting_location=(0, 0), starting_hunger=INIT_HUNGER, eye_sight=EYE_SIGHT):
+    def __init__(self, starting_location=(0, 0), starting_hunger=INIT_HUNGER):
         self.location = starting_location
         self.hunger_level = starting_hunger
-        self.eye_sight = eye_sight
 
     def __str__(self):
         return "Creature \n \t Location: " + str(self.get_location()) + " \n \t Hunger Level: " + str(self.hunger_level)

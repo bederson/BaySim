@@ -24,11 +24,8 @@ STEP_TIME = 100           # In milliseconds
 DEFAULT_NUM_CREATURE_STEPS_TO_SKIP = 6
 NUM_CREATURE_STEPS_TO_SKIP_AFTER_MANUAL_MOVE = 30
 ELEVATION_MAX = 5
-EYE_SIGHT = WORLD_DIM / 6
-WATER_SOURCE_FLOW = 10.0            # Amount of water generated per step at each water source
-WATER_MAX_FLOW = 1.0                # Maximum amount of water that can move from one cell to another per step
-EVAPORATION_RATE = 0.006
 INIT_WATER_LEVEL = 2
+EVAPORATION_RATE = 0.001
 
 DIRECTION_DELTAS = {
     'Left':  [0, -1],

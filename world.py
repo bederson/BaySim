@@ -104,7 +104,7 @@ class World():
                 if index in food_indices:
                     cell = ArableLandCell(self, [row_num, col_num], elev)
                 elif index in water_indices:
-                    cell = WaterSourceCell(self, [row_num, col_num], elev, WATER_SOURCE_FLOW)
+                    cell = WaterSourceCell(self, [row_num, col_num], elev)
                 else:
                     cell = LandCell(self, [row_num, col_num], elev)
                 row_list.append(cell)
