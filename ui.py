@@ -1,28 +1,25 @@
 from Tkinter import *
-from constants import *
 from simulation import *
 
 
 class UI():
-    def __init__(self, sim):
+    def __init__(self, simulation):
         self.root = None
         self.canvas = None
-        self.simulation = sim
+        self.simulation = simulation
         self.world_images = {}
-        self.creature_id = None
-        self.creature_meter_id = None
         self.cell_id_dict = {}
         self.watercell_id_dict = {}
         self.pollutioncell_id_dict = {}
         self.plant_id_dict = {}
         self.text_id_dict = {}
+        self.crab_id_dict = {}
 
     ######## HANDLER CODE
     def init_handlers(self):
         self.create_event_timer()
         self.canvas.bind_all('<KeyPress>', self.key_handler)
         self.simulation.add_world_handler(self.world_handler)
-        self.simulation.add_creature_handler(self.creature_handler)
 
     def create_event_timer(self, delay_time=STEP_TIME):
         self.root.after(delay_time, self.timer_handler)
@@ -32,33 +29,17 @@ class UI():
         self.create_event_timer()
 
     def key_handler(self, evt):
-        if not evt.keysym in DIRECTION_DELTAS:
-            return
-        original_location = self.simulation.creature.get_location()
-        new_location = self.simulation.creature.move(evt.keysym, self.simulation.world)
-        if new_location:
-            self.simulation.creature.eat(self.simulation.world)
-            self.simulation.delay_creature_auto_movement()
-            self.creature_handler(original_location, new_location)      # Call manually because creature doesn't fire events
+        # handle evt.keysym
+        pass
 
     # Gets called by simulation when world changes
     def world_handler(self):
-        self.canvas_update_creature_meter()
-        self.canvas_update_water_pollution_and_plant()
-
-    # Gets called by simulation when creature changes
-    def creature_handler(self, original_location, new_location):
-        if new_location:
-            self.canvas_move_creature(original_location, new_location)
-            self.canvas_update_creature_meter()
+        self.canvas_update_visuals()
 
     ######### RENDERING CODE
     def canvas_allocate_images(self):
         self.world_images = {
-            IMAGE_CREATURE_UP: PhotoImage(file=IMAGE_CREATURE_UP),
-            IMAGE_CREATURE_DOWN: PhotoImage(file=IMAGE_CREATURE_DOWN),
-            IMAGE_CREATURE_LEFT: PhotoImage(file=IMAGE_CREATURE_LEFT),
-            IMAGE_CREATURE_RIGHT: PhotoImage(file=IMAGE_CREATURE_RIGHT),
+            IMAGE_CRAB: PhotoImage(file=IMAGE_CRAB),
             IMAGE_WATER_SOURCE: PhotoImage(file=IMAGE_WATER_SOURCE),
             IMAGE_ARABLE_LAND: PhotoImage(file=IMAGE_ARABLE_LAND),
             IMAGE_LAND1: PhotoImage(file=IMAGE_LAND1),
@@ -107,17 +88,9 @@ class UI():
     def canvas_get_image(self, image_key):
         return self.world_images[image_key]
 
-    def canvas_get_creatureimage(self, direction):
-        creature_image = None
-        if direction == 'Left':
-            creature_image = self.canvas_get_image(IMAGE_CREATURE_LEFT)
-        elif direction == 'Right':
-            creature_image = self.canvas_get_image(IMAGE_CREATURE_RIGHT)
-        elif direction == 'Up':
-            creature_image = self.canvas_get_image(IMAGE_CREATURE_UP)
-        elif direction == 'Down':
-            creature_image = self.canvas_get_image(IMAGE_CREATURE_DOWN)
-        return creature_image
+    def canvas_get_crabimage(self):
+        crab_image = self.canvas_get_image(IMAGE_CRAB)
+        return crab_image
 
     def canvas_get_landimage(self, elevation):
         land_image = None
@@ -215,108 +188,77 @@ class UI():
             plant_image = self.canvas_get_image(IMAGE_PLANT10)
         return plant_image
 
-    def canvas_create_cell(self, row_num, col_num, image):
-        cell_id = self.canvas.create_image(col_num*CELL_SIZE, row_num*CELL_SIZE, anchor=NW, image=image)
+    def canvas_create_image(self, row_num, col_num, image, offset=0):
+        cell_id = self.canvas.create_image(col_num*CELL_SIZE+offset, row_num*CELL_SIZE+offset, anchor=NW, image=image)
         return cell_id
 
-    def canvas_create_creaturecell(self, row_num, col_num, direction):
-        if self.creature_id:
-            self.canvas.delete(self.creature_id)
-        creature_image = self.canvas_get_creatureimage(direction)
-        self.creature_id = self.canvas_create_cell(row_num, col_num, creature_image)
-        return self.creature_id
+    def canvas_create_crab_item(self, row_num, col_num):
+        key = (row_num, col_num)
+        if key in self.crab_id_dict:
+            self.canvas.delete(self.crab_id_dict[key])
+        crab_image = self.canvas_get_crabimage()
+        crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset=2)
+        self.crab_id_dict[key] = crab_id
 
-    def canvas_create_landcell(self, row_num, col_num, elevation):
-        land_image = self.canvas_get_landimage(elevation)
-        land_id = self.canvas_create_cell(row_num, col_num, land_image)
+    def canvas_create_land_item(self, row_num, col_num, elevation):
         key = (row_num, col_num)
         if key in self.cell_id_dict:
             self.canvas.delete(self.cell_id_dict[key])
+        land_image = self.canvas_get_landimage(elevation)
+        land_id = self.canvas_create_image(row_num, col_num, land_image)
         self.cell_id_dict[key] = land_id
         return land_image
 
-    def canvas_create_buildingcell(self, row_num, col_num, elevation):
-        building_image = self.canvas_get_image(IMAGE_BUILDING)
-        building_id = self.canvas_create_cell(row_num, col_num, building_image)
+    def canvas_create_building_item(self, row_num, col_num, elevation):
         key = (row_num, col_num)
         if key in self.cell_id_dict:
             self.canvas.delete(self.cell_id_dict[key])
+        building_image = self.canvas_get_image(IMAGE_BUILDING)
+        building_id = self.canvas_create_image(row_num, col_num, building_image)
         self.cell_id_dict[key] = building_id
         return building_image
 
-    def canvas_create_watercell(self, row_num, col_num, water_level):
-        water_image = self.canvas_get_waterimage(water_level)
-        water_id = self.canvas_create_cell(row_num, col_num, water_image)
+    def canvas_create_water_item(self, row_num, col_num, water_level):
         key = (row_num, col_num)
         if key in self.watercell_id_dict:
             self.canvas.delete(self.watercell_id_dict[key])
-        self.watercell_id_dict[key] = water_id
-        return water_id
+        if water_level > 0:
+            water_image = self.canvas_get_waterimage(water_level)
+            water_id = self.canvas_create_image(row_num, col_num, water_image)
+            self.watercell_id_dict[key] = water_id
 
-    def canvas_create_pollutioncell(self, row_num, col_num, pollution_level):
-        pollution_image = self.canvas_get_pollutionimage(pollution_level)
-        pollution_id = self.canvas_create_cell(row_num, col_num, pollution_image)
+    def canvas_create_pollution_item(self, row_num, col_num, pollution_level):
         key = (row_num, col_num)
         if key in self.pollutioncell_id_dict:
             self.canvas.delete(self.pollutioncell_id_dict[key])
-        self.pollutioncell_id_dict[key] = pollution_id
-        return pollution_id
+        if pollution_level > 0:
+            pollution_image = self.canvas_get_pollutionimage(pollution_level)
+            pollution_id = self.canvas_create_image(row_num, col_num, pollution_image)
+            self.pollutioncell_id_dict[key] = pollution_id
 
-    def canvas_create_plantcell(self, row_num, col_num, plant_level):
-        plant_image = self.canvas_get_plantimage(plant_level)
-        plant_id = self.canvas_create_cell(row_num, col_num, plant_image)
+    def canvas_create_plant_item(self, row_num, col_num, plant_level):
         key = (row_num, col_num)
         if key in self.plant_id_dict:
             self.canvas.delete(self.plant_id_dict[key])
-        self.plant_id_dict[key] = plant_id
-        return plant_id
+        if plant_level > 0:
+            plant_image = self.canvas_get_plantimage(plant_level)
+            plant_id = self.canvas_create_image(row_num, col_num, plant_image)
+            self.plant_id_dict[key] = plant_id
 
     def canvas_create_world(self):
         for row_num, row in enumerate(self.simulation.world.grid):
             for col_num, cell in enumerate(row):
                 elevation = cell.get_elevation()
                 if isinstance(cell, BuildingCell):
-                    self.canvas_create_buildingcell(row_num, col_num, elevation)
+                    self.canvas_create_building_item(row_num, col_num, elevation)
                 else:
-                    self.canvas_create_landcell(row_num, col_num, elevation)
+                    self.canvas_create_land_item(row_num, col_num, elevation)
+
                 if isinstance(cell, WaterSourceCell):
                     watersource_image = self.canvas_get_image(IMAGE_WATER_SOURCE)
-                    self.canvas_create_cell(row_num, col_num, watersource_image)
+                    self.canvas_create_image(row_num, col_num, watersource_image)
 
-        creature_loc = self.simulation.creature.get_location()
-        creature_row = creature_loc[ROW_INDEX]
-        creature_col = creature_loc[COL_INDEX]
-        self.canvas_create_creaturecell(creature_row, creature_col, 'Up')
-        self.canvas_update_creature_meter()
-
-    def canvas_move_creature(self, original_location, new_location):
-        delta_row = new_location[ROW_INDEX] - original_location[ROW_INDEX]
-        delta_col = new_location[COL_INDEX] - original_location[COL_INDEX]
-        if delta_row == 1:
-            direction = 'Down'
-        elif delta_row == -1:
-            direction = 'Up'
-        elif delta_col == 1:
-            direction = 'Right'
-        else:
-            direction = 'Left'
-        self.canvas_create_creaturecell(new_location[ROW_INDEX], new_location[COL_INDEX], direction)
-
-    def canvas_update_creature_meter(self):
-        creature_loc = self.simulation.creature.get_location()
-        creature_row = creature_loc[ROW_INDEX]
-        creature_col = creature_loc[COL_INDEX]
-        value = self.simulation.creature.get_hunger_level()
-        x1 = CELL_SIZE * creature_col
-        y1 = CELL_SIZE * creature_row
-        x2 = x1 + value * CELL_SIZE / LEVEL_MAX
-        y2 = y1 + METER_HEIGHT
-        if not self.creature_meter_id:
-            self.creature_meter_id = self.canvas.create_rectangle(x1, y1, x2, y2, outline='gray', fill='orange')
-        else:
-            self.canvas.coords(self.creature_meter_id, x1, y1, x2, y2)
-
-    def canvas_update_water_pollution_and_plant(self):
+    def canvas_update_visuals(self):
         for row_num, row in enumerate(self.simulation.world.grid):
             for col_num, cell in enumerate(row):
                 if isinstance(cell, WaterSourceCell):
@@ -326,32 +268,20 @@ class UI():
 
                 # Update water overlay
                 water_level = cell.get_water_level()
-                key = (row_num, col_num)
-                if key in self.watercell_id_dict:
-                    self.canvas.delete(self.watercell_id_dict[key])
-                if water_level > 0:
-                    watercell_image = self.canvas_get_waterimage(water_level)
-                    watercell_id = self.canvas.create_image(col_num * CELL_SIZE, row_num * CELL_SIZE, anchor=NW, image=watercell_image)
-                    self.watercell_id_dict[(row_num, col_num)] = watercell_id
+                self.canvas_create_water_item(row_num, col_num, water_level)
 
                 # Update pollution overlay
                 pollution_level = cell.get_pollution_level()
-                key = (row_num, col_num)
-                if key in self.pollutioncell_id_dict:
-                    self.canvas.delete(self.pollutioncell_id_dict[key])
-                if pollution_level > 0:
-                    pollutioncell_image = self.canvas_get_pollutionimage(pollution_level)
-                    pollutioncell_id = self.canvas.create_image(col_num * CELL_SIZE, row_num * CELL_SIZE, anchor=NW, image=pollutioncell_image)
-                    self.pollutioncell_id_dict[(row_num, col_num)] = pollutioncell_id
-                else:
-                    if isinstance(cell, ArableLandCell):
-                        plant_level = cell.get_food_level()
-                        if key in self.plant_id_dict:
-                            self.canvas.delete(self.plant_id_dict[key])
-                        if plant_level > 0:
-                            plant_image = self.canvas_get_plantimage(plant_level)
-                            plant_id = self.canvas.create_image(col_num * CELL_SIZE, row_num * CELL_SIZE, anchor=NW, image=plant_image)
-                            self.plant_id_dict[(row_num, col_num)] = plant_id
+                self.canvas_create_pollution_item(row_num, col_num, pollution_level)
+
+                # Update crab overlay
+                if cell.get_crab():
+                    self.canvas_create_crab_item(row_num, col_num)
+
+                # Update plants
+                if isinstance(cell, ArableLandCell):
+                    plant_level = cell.get_food_level()
+                    self.canvas_create_plant_item(row_num, col_num, plant_level)
 
     def init_simulation(self, world_width=WORLD_WIDTH * CELL_SIZE, world_height=WORLD_HEIGHT * CELL_SIZE):
         self.root = Tk()

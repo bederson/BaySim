@@ -1,5 +1,6 @@
 from perlin import SimplexNoise
-from creature import *
+from crab import *
+from cells import *
 import random
 
 
@@ -13,7 +14,6 @@ class World():
         self.world_width = world_width
         self.world_height = world_height
         self.grid = []
-        self.creature = None
         self.generate_world(num_foods, num_water_sources)
 
     def get_food_level(self, row, col):
@@ -51,7 +51,7 @@ class World():
         # Iterate over cells
         for row_num, row in enumerate(self.grid):
             for col_num, cell in enumerate(row):
-                # If cell has or generates water, then iterate over neighbors
+                # If cell has or generates water, then flow water into neighbors
                 if cell.water_level > 0 or isinstance(cell, WaterSourceCell):
                     for neighbor in cell.neighbors(include_water=True):
                         amount_water_to_move = 0
@@ -68,7 +68,7 @@ class World():
                             neighbor.water_level += amount_water_to_move
                             cell.water_level -= amount_water_to_move
 
-                # If cell has or generates pollution, then iterate over neighbors
+                # If cell has or generates pollution, then flow pollution into neighbors
                 if cell.pollution > 0 or isinstance(cell, BuildingCell):
                     for neighbor in cell.neighbors(include_water=True):
                         if neighbor.get_elevation() < cell.get_elevation():
@@ -86,6 +86,15 @@ class World():
                 # Grow plants
                 if isinstance(cell, ArableLandCell):
                     cell.grow()
+
+                # Process crabs
+                crab = cell.get_crab()
+                if crab:
+                    loc = crab.find_best_nearby_cell(self)
+                    cell.crab = None
+                    crab.location = loc
+                    new_cell = self.get_cell(loc[ROW_INDEX], loc[COL_INDEX])
+                    new_cell.crab = crab
 
     def generate_world(self, num_foods, num_water_sources):
         """
@@ -167,13 +176,14 @@ class World():
                 self.grid[row_num][col_num] = water_cell
                 num_water_sources -= 1
 
-        # Add the creature
-        num_creatures = 1
-        while num_creatures > 0:
+        # Add the crabs (replace some water cells with creatures)
+        num_crabs = NUM_CRABS
+        while num_crabs > 0:
             row_num = random.randint(0, self.world_height - 1)
             col_num = random.randint(0, self.world_width - 1)
             cell = self.grid[row_num][col_num]
             elevation = cell.get_elevation()
-            if INIT_WATER_LEVEL < elevation:
-                self.creature = Creature([row_num, col_num], INIT_HUNGER)
-                num_creatures -= 1
+            if elevation < INIT_WATER_LEVEL - 1:
+                crab = Crab([row_num, col_num])
+                cell.crab = crab
+                num_crabs -= 1
