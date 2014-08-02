@@ -21,6 +21,7 @@ class LandCell(object):
         self.location = location     # (row, col)
         self.elevation = elevation
         self.water_level = INIT_WATER_LEVEL - elevation
+        self.pollution = 0
 
     def __str__(self):
         """
@@ -60,6 +61,9 @@ class LandCell(object):
         Returns the water level of this cell
         """
         return self.water_level
+
+    def get_pollution_level(self):
+        return self.pollution
 
     def add_to_water_level(self, amount):
         """
@@ -190,4 +194,4 @@ class BuildingCell(LandCell):
     """
     def __init__(self, world, location, elevation):
         LandCell.__init__(self, world, location, elevation)
-        self.runoff_gen = random()
+        self.runoff_gen = random() / 2
