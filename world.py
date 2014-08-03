@@ -16,6 +16,7 @@ class World():
         self.grid = []
         self.elevation_min = 0
         self.elevation_max = 0
+        self.num_crabs = 0
         self.generate_world(num_foods)
 
     def get_food_level(self, row, col):
@@ -196,4 +197,5 @@ class World():
             if elevation < INIT_WATER_LEVEL - 1:
                 crab = Crab([row_num, col_num])
                 cell.crab = crab
+                self.num_crabs += 1
                 num_crabs -= 1

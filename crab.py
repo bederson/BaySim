@@ -59,30 +59,37 @@ class Crab():
     def step(self, cell, world):
         self.move(cell, world)
 
-        if cell.pollution > 0:
-            self.health -= cell.pollution
-        else:
-            self.health += 0.1
-
-        if self.health <= 0:
-            self.die(cell)
-        elif self.health > MAX_HEALTH:
-            self.spawn(world)
+        if self.health > 0:
+            if cell.pollution > 0:
+                self.health -= cell.pollution
+                if self.health <= 0:
+                    self.die(cell, world)
+            else:
+                self.health += 0.1
+                if self.health > MAX_HEALTH:
+                    self.spawn(world)
 
     def move(self, cell, world):
         new_loc = self.find_best_nearby_cell(world)
-        cell.crab = None
-        self.location = new_loc
-        new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
-        new_cell.crab = self
+        if new_loc:
+            cell.crab = None
+            self.location = new_loc
+            new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
+            new_cell.crab = self
 
-    def die(self, cell):
-        cell.crab = None
+    def die(self, cell, world):
+        # When UI updates, the crab reference will be removed
+        self.health = 0
+        world.num_crabs -= 1
+        print "crab died", world.num_crabs
 
     def spawn(self, world):
-        self.health = self.init_health()
         new_loc = self.get_random_direction(world)
-        new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
-        if not new_cell.crab:
-            new_crab = Crab(new_loc)
-            new_cell.crab = new_crab
+        if new_loc:
+            new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
+            if not new_cell.crab:
+                self.health = self.init_health()
+                new_crab = Crab(new_loc)
+                new_cell.crab = new_crab
+                world.num_crabs += 1
+                print "spawned crab", world.num_crabs

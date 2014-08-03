@@ -14,6 +14,8 @@ class UI():
         self.plant_id_dict = {}
         self.text_id_dict = {}
         self.crab_id_dict = {}
+        # UI
+        self.label_num_crabs = None
 
     ######## HANDLER CODE
     def init_handlers(self):
@@ -41,6 +43,7 @@ class UI():
     # Gets called by simulation when world changes
     def world_handler(self):
         self.canvas_update_visuals()
+        self.update_stats()
 
     ######### RENDERING CODE
     def canvas_allocate_images(self):
@@ -99,15 +102,16 @@ class UI():
         return self.world_images[image_key]
 
     def canvas_get_crabimage(self, health):
-        if health < 0.2 * MAX_HEALTH:
+        crab_image = None
+        if 0 < health <= 0.2 * MAX_HEALTH:
             crab_image = self.canvas_get_image(IMAGE_CRAB1)
-        elif health < 0.4 * MAX_HEALTH:
+        elif 0.2 * MAX_HEALTH < health <= 0.4 * MAX_HEALTH:
             crab_image = self.canvas_get_image(IMAGE_CRAB2)
-        elif health < 0.6 * MAX_HEALTH:
+        elif 0.4 * MAX_HEALTH < health <= 0.6 * MAX_HEALTH:
             crab_image = self.canvas_get_image(IMAGE_CRAB3)
-        elif health < 0.8 * MAX_HEALTH:
+        elif 0.6 * MAX_HEALTH < health <= 0.8 * MAX_HEALTH:
             crab_image = self.canvas_get_image(IMAGE_CRAB4)
-        else:
+        elif 0.8 * MAX_HEALTH < health:
             crab_image = self.canvas_get_image(IMAGE_CRAB5)
         return crab_image
 
@@ -217,54 +221,62 @@ class UI():
         cell_id = self.canvas.create_image(col_num*CELL_SIZE+offset, row_num*CELL_SIZE+offset, anchor=NW, image=image)
         return cell_id
 
-    def canvas_create_crab_item(self, row_num, col_num, health):
+    def update_crab_item(self, row_num, col_num, health):
         key = (row_num, col_num)
         if key in self.crab_id_dict:
             self.canvas.delete(self.crab_id_dict[key])
+            del self.crab_id_dict[key]
         crab_image = self.canvas_get_crabimage(health)
-        crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset= (10 - health) / 2)
-        self.crab_id_dict[key] = crab_id
+        if crab_image:
+            crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset= (10 - health) / 2)
+            self.crab_id_dict[key] = crab_id
+        return crab_image
 
-    def canvas_create_land_item(self, row_num, col_num, elevation):
+    def update_land_item(self, row_num, col_num, elevation):
         key = (row_num, col_num)
         if key in self.cell_id_dict:
             self.canvas.delete(self.cell_id_dict[key])
+            del self.cell_id_dict[key]
         land_image = self.canvas_get_landimage(elevation)
         land_id = self.canvas_create_image(row_num, col_num, land_image)
         self.cell_id_dict[key] = land_id
         return land_image
 
-    def canvas_create_building_item(self, row_num, col_num, elevation):
+    def update_building_item(self, row_num, col_num, elevation):
         key = (row_num, col_num)
         if key in self.cell_id_dict:
             self.canvas.delete(self.cell_id_dict[key])
+            del self.cell_id_dict[key]
         building_image = self.canvas_get_image(IMAGE_BUILDING)
         building_id = self.canvas_create_image(row_num, col_num, building_image)
         self.cell_id_dict[key] = building_id
         return building_image
 
-    def canvas_create_water_item(self, row_num, col_num, water_level):
+    def update_water_item(self, row_num, col_num, water_level):
         key = (row_num, col_num)
         if key in self.watercell_id_dict:
             self.canvas.delete(self.watercell_id_dict[key])
+            del self.watercell_id_dict[key]
         if water_level > 0:
             water_image = self.canvas_get_waterimage(water_level)
             water_id = self.canvas_create_image(row_num, col_num, water_image)
             self.watercell_id_dict[key] = water_id
 
-    def canvas_create_pollution_item(self, row_num, col_num, pollution_level):
+    def update_pollution_item(self, row_num, col_num, pollution_level):
         key = (row_num, col_num)
         if key in self.pollutioncell_id_dict:
             self.canvas.delete(self.pollutioncell_id_dict[key])
+            del self.pollutioncell_id_dict[key]
         if pollution_level > 0:
             pollution_image = self.canvas_get_pollutionimage(pollution_level)
             pollution_id = self.canvas_create_image(row_num, col_num, pollution_image)
             self.pollutioncell_id_dict[key] = pollution_id
 
-    def canvas_create_plant_item(self, row_num, col_num, plant_level):
+    def update_plant_item(self, row_num, col_num, plant_level):
         key = (row_num, col_num)
         if key in self.plant_id_dict:
             self.canvas.delete(self.plant_id_dict[key])
+            del self.plant_id_dict[key]
         if plant_level > 0:
             plant_image = self.canvas_get_plantimage(plant_level)
             plant_id = self.canvas_create_image(row_num, col_num, plant_image)
@@ -275,15 +287,16 @@ class UI():
             for col_num, cell in enumerate(row):
                 elevation = cell.get_elevation()
                 if isinstance(cell, BuildingCell):
-                    self.canvas_create_building_item(row_num, col_num, elevation)
+                    self.update_building_item(row_num, col_num, elevation)
                 else:
-                    self.canvas_create_land_item(row_num, col_num, elevation)
+                    self.update_land_item(row_num, col_num, elevation)
 
                 if isinstance(cell, WaterSourceCell):
                     watersource_image = self.canvas_get_image(IMAGE_WATER_SOURCE)
                     self.canvas_create_image(row_num, col_num, watersource_image)
 
     def canvas_update_visuals(self):
+        crab_count = 0
         for row_num, row in enumerate(self.simulation.world.grid):
             for col_num, cell in enumerate(row):
                 if isinstance(cell, WaterSourceCell):
@@ -293,33 +306,63 @@ class UI():
 
                 # Update water overlay
                 water_level = cell.get_water_level()
-                self.canvas_create_water_item(row_num, col_num, water_level)
+                self.update_water_item(row_num, col_num, water_level)
 
                 # Update pollution overlay
                 pollution_level = cell.get_pollution_level()
-                self.canvas_create_pollution_item(row_num, col_num, pollution_level)
+                self.update_pollution_item(row_num, col_num, pollution_level)
 
                 # Update crab overlay
-                if cell.get_crab():
-                    self.canvas_create_crab_item(row_num, col_num, cell.get_crab().health)
+                if cell.crab:
+                    # print cell.crab.health
+                    crab_image = self.update_crab_item(row_num, col_num, cell.crab.health)
+                    if not crab_image:
+                        cell.crab = None
+                    else:
+                        crab_count += 1
 
                 # Update plants
                 if isinstance(cell, ArableLandCell):
                     plant_level = cell.get_food_level()
-                    self.canvas_create_plant_item(row_num, col_num, plant_level)
+                    self.update_plant_item(row_num, col_num, plant_level)
+        # print "crab count: " + str(crab_count)
+
+    def update_stats(self):
+        world = self.simulation.world
+        text = str(world.num_crabs) + " crab"
+        if world.num_crabs != 1:
+            text += "s"
+        self.label_num_crabs.set(text)
 
     def init_simulation(self, world_width=WORLD_WIDTH * CELL_SIZE, world_height=WORLD_HEIGHT * CELL_SIZE):
         self.root = Tk()
         self.root.wm_title("BaySim")
-        canvas = Canvas(self.root, width=world_width, height=world_height)
-        canvas.pack(fill="both", expand=1)
+
+        self.canvas = Canvas(self.root, width=world_width, height=world_height)
+        self.canvas.grid(row=1, column=1)
+        frame = Frame(self.root)
+        frame.grid(row=1, column=2)
+        Label(frame, text="Bay Health").grid(row=1, column=2, columnspan=2)
+        Label(frame).grid(row=2, column=2)
+        self.label_num_crabs = StringVar()
+        Label(frame, textvariable=self.label_num_crabs, anchor=W).grid(row=3, column=2, columnspan=2)
+        Label(frame, text="some thing: ").grid(row=4, column=2)
+        Button(frame, text="Do thing", command=f2_cmd).grid(row=4, column=3)
+
+        Label(frame).grid(row=49, column=2, columnspan=2, stick=N+S+E+W)
+
+        Button(frame, text="Exit", command=frame.quit).grid(row=50, column=2, columnspan=2, sticky=W+E)
+
         self.root.wait_visibility(self.root)
-        self.canvas = canvas
         self.canvas_allocate_images()
         self.init_handlers()
         self.canvas_create_world()
         self.root.lift()
         self.root.mainloop()                # Enter Tk event loop
+        self.root.destroy()
+
+def f2_cmd():
+    print "Do it"
 
 sim = Simulation()
 ui = UI(sim)

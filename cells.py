@@ -158,7 +158,7 @@ class ArableLandCell(LandCell):
         The plant level must never exceed the constant LEVEL_MAX
         """
         if self.water_level == 0:
-            self.plant += FOOD_GROWTH
+            self.plant += FOOD_GROWTH * random()
             if self.plant > LEVEL_MAX:
                 self.plant = LEVEL_MAX
 
