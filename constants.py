@@ -13,13 +13,12 @@ MIN_CRAB_DEPTH = 5
 
 # Simulation constants
 TERRAIN_SMOOTHNESS = 50.0           # Bigger values makes the terrain smoother
-HUNGER_GROWTH = 0.01
 FOOD_DEFAULT = -1.0
 FOOD_GROWTH = 0.01        # Amount food grows per step
 LEVEL_MAX = 4
 STEP_TIME = 10           # In milliseconds
 INIT_WATER_LEVEL = 0
-EVAPORATION_RATE = 0.01
+EVAPORATION_RATE = 0.001
 MAX_HEALTH = 10
 MAX_POLLUTION = 10
 

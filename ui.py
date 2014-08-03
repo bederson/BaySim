@@ -16,6 +16,9 @@ class UI():
         self.crab_id_dict = {}
         # UI
         self.label_num_crabs = None
+        self.label_water_level = None
+        self.label_pollution = None
+        self.label_blg_dist = None
 
     ######## HANDLER CODE
     def init_handlers(self):
@@ -38,7 +41,7 @@ class UI():
 
     def mouse_handler(self, evt):
         # Click prints cell location
-#        print "[" + str(evt.y / 8) + ", " + str(evt.x / 8) + "],"
+        # print "[" + str(evt.y / 8) + ", " + str(evt.x / 8) + "],"
         pass
 
     # Gets called by simulation when world changes
@@ -332,10 +335,17 @@ class UI():
 
     def update_stats(self):
         world = self.simulation.world
-        text = str(world.num_crabs) + " crab"
-        if world.num_crabs != 1:
-            text += "s"
+        text = "Crabs: " + str(world.num_crabs)
         self.label_num_crabs.set(text)
+
+        measured_cell = self.simulation.world.get_cell(90, 53)
+        water_level = measured_cell.elevation + measured_cell.water_level
+        water_level_str = "%.2f" % water_level
+        self.label_water_level.set("Water level: " + water_level_str + "m")
+
+        self.label_pollution.set("Pollution: --")
+
+        self.label_blg_dist.set("Avg building distance to water: --")
 
     def init_simulation(self, world_width=WORLD_WIDTH * CELL_SIZE, world_height=WORLD_HEIGHT * CELL_SIZE):
         self.root = Tk()
@@ -344,17 +354,40 @@ class UI():
         self.canvas = Canvas(self.root, width=world_width, height=world_height)
         self.canvas.grid(row=1, column=1)
         frame = Frame(self.root)
-        frame.grid(row=1, column=2)
-        Label(frame, text="Bay Health").grid(row=1, column=2, columnspan=2)
+        frame.grid(row=1, column=2, sticky=N)
+        Label(frame, text="Bay Health", font=("sans-serif", 18, "bold")).grid(row=1, column=2, columnspan=3)
         Label(frame).grid(row=2, column=2)
+
+        # Num crabs
         self.label_num_crabs = StringVar()
-        Label(frame, textvariable=self.label_num_crabs, anchor=W).grid(row=3, column=2, columnspan=2)
-        Label(frame, text="some thing: ").grid(row=4, column=2)
-        Button(frame, text="Do thing", command=f2_cmd).grid(row=4, column=3)
+        Label(frame, textvariable=self.label_num_crabs, anchor=W).grid(row=3, column=2, columnspan=3, sticky=W)
+        # Water level
+        self.label_water_level = StringVar()
+        Label(frame, textvariable=self.label_water_level, anchor=W).grid(row=4, column=2, columnspan=3, sticky=W)
+        # Amount of pollution
+        self.label_pollution = StringVar()
+        Label(frame, textvariable=self.label_pollution, anchor=W).grid(row=5, column=2, columnspan=3, sticky=W)
+        # Average distance from buildings to water
+        self.label_blg_dist = StringVar()
+        Label(frame, textvariable=self.label_blg_dist, anchor=W).grid(row=6, column=2, columnspan=3, sticky=W)
+
+        Label(frame).grid(row=10, column=2, columnspan=2, stick=N+S+E+W)
+
+        Label(frame, text="# Buildings: ").grid(row=20, column=2, sticky=E)
+        Button(frame, text="More", command=f2_cmd).grid(row=20, column=3)
+        Button(frame, text="Less", command=f2_cmd).grid(row=20, column=4)
+
+        Label(frame, text="Polution: ").grid(row=21, column=2, sticky=E)
+        Button(frame, text="More", command=f2_cmd).grid(row=21, column=3)
+        Button(frame, text="Less", command=f2_cmd).grid(row=21, column=4)
+
+        Label(frame, text="Crabbing: ").grid(row=22, column=2, sticky=E)
+        Button(frame, text="More", command=f2_cmd).grid(row=22, column=3)
+        Button(frame, text="Less", command=f2_cmd).grid(row=22, column=4)
 
         Label(frame).grid(row=49, column=2, columnspan=2, stick=N+S+E+W)
 
-        Button(frame, text="Exit", command=frame.quit).grid(row=50, column=2, columnspan=2, sticky=W+E)
+        Button(frame, text="Exit", command=frame.quit).grid(row=50, column=2, columnspan=3, sticky=W+E)
 
         self.root.wait_visibility(self.root)
         self.canvas_allocate_images()
