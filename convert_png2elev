@@ -1,11 +1,18 @@
-#! /bin/csh -fvx
+#! /bin/csh -f
 #
-# This script provides the workflow to merge 3 PNG's obtained 
+# This shell script provides the workflow to merge 3 PNG's obtained 
 # via ArcView with the help of Lisa Low into a simple ascii
 # table for input into BaySim. 
+# It converts 3 PNG files into one combined (NEMO) CCD files,
+# of which the grid values are then printed in ASCII format for
+# BaySim.
+#
 # Some numbers are hardcoded here, as well as in BaySim
 # e.g. sizes 74x99 of the final map
 #
+# Various problems re-solved via some tricky hacking.
+#
+# Original written:    2-aug-2014     Peter Teuben
 
 
 set redo_png2map = 1
@@ -19,12 +26,13 @@ if ($redo_png2map) then
    # NEMO:  fits -> ccd (1 plane)
    rm map1 map2 map3
    set poly1=399,227,533,189,630,127,726,-1,582,-1,422,138        # Rappahannock River (in VA, not looking nice)
-   fitsccd ChesapeakeBayDepth.fits -           | ccdslice - -    z 1 | ccdpatch - map1 255 poly=$poly1
+   fitsccd ChesapeakeBayDepth.fits -           | ccdslice - -    z 1 | ccdpatch - map1 255 polygon=$poly1
    fitsccd LandElevation.fits      - blank=255 | ccdslice - map2 z 1
    fitsccd LandElevation2.fits     - blank=255 | ccdslice - map3 z 1
 endif
 
 
+# The (a,b,d) values are what provide the height calibrations, the PNG data is always 0..255
 # low values
 set a1=-52.933
 set a2=-5
@@ -40,21 +48,23 @@ set d1=54.91
 set d2=105
 set d3=200
 
-#  combining is tricky , since we didn't write the intensity values 
-#  neither do we know the greyscale lookup table
+#  combining is tricky , since we didn't write the intensity values down (oops)
+#  neither do we know the greyscale lookup table (could have a gamma factor)
+#  The (a,b,d) tuples allow you to experiment.
 #  map1 (sea level) -                       255 is undef   0 is about -50m
 #  map2 (land -5 .. 100)                      0 is undef   0 is about -5m
 #  map3 (land 100 .. 500, or was it 200)      0 is undef   0 is about 100m
 
 rm -f map123 map123?
 
+#   the order of the ifne's is important, since map1 and map2 have "redundant" values in some places
 ccdmath \
     map1,map2,map3 \
     map123 \
     "ifne(%1,255,$d1*%1/255+$a1,ifne(%2,0,%2*$d2/255+$a2,ifne(%3,0,%3*$d3/255+$a3,0)))"
 
 #
-# regrid/sample:  from 1645 x 1188 -> 881 x 1188
+# regrid/resample:  from 1645 x 1188 -> 881 x 1188
 #
 ccdsub   map123  map123c x=400:1280
 ccdfill  map123c map123d m=4
@@ -66,5 +76,4 @@ set peak = 277
 ccdmath  map123g map123h "ifeq(%1,0,$peak,%1)"
 
 # now convert to the ascii file
-#ccdprint map123g x= y= newline=t label=x,y | tabcomment - - delete=t > bay.elev
 ccdprint map123h x= y= newline=t label=x,y | tabcomment - - delete=t > bay.elev
