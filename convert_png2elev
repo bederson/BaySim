@@ -1,16 +1,17 @@
 #! /bin/csh -f
 #
 # This shell script provides the workflow to merge 3 PNG's obtained 
-# via ArcView with the help of Lisa Low into a simple ascii
-# table for input into BaySim. 
-# It converts 3 PNG files into one combined (NEMO) CCD files,
+# via ArcView (with the help of Lisa Low) into a simple ascii
+# table as input into BaySim. 
+# It converts the 3 PNG files into one combined (NEMO) CCD file,
 # of which the grid values are then printed in ASCII format for
 # BaySim.
 #
 # Some numbers are hardcoded here, as well as in BaySim
 # e.g. sizes 74x99 of the final map
 #
-# Various problems re-solved via some tricky hacking.
+# Various problems resolved via some tricky hacking.
+#  - virginia
 #
 # Original written:    2-aug-2014     Peter Teuben
 
@@ -77,3 +78,11 @@ ccdmath  map123g map123h "ifeq(%1,0,$peak,%1)"
 
 # now convert to the ascii file
 ccdprint map123h x= y= newline=t label=x,y | tabcomment - - delete=t > bay.elev
+
+
+#
+if (1) then
+  ccdsub map123e map123z1 171:171+74-1  605:605+99-1
+  ccdprint map123z1 x= y= newline=t label=x,y | tabcomment - - delete=t > bayz.elev
+  
+endif
