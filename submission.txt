@@ -1,0 +1,35 @@
+Various text boxes meant for the submission:
+
+
+* Name:          
+ [Market your product]
+BaySim
+
+* Tagline: 
+  [Explain your software in a tweetable sentence.]
+Simulating the Bay: the good, the bad, and the ugly
+
+
+* Description:
+  [Tell the story behind the code. What inspired you? Who is your target user? What key features are you most proud of? ]
+
+
+it's a game!   (more to come)
+
+
+Some technical background:
+
+1) We first had to find a (raster based) dataset that describes the
+elevations in both land and sea, and had to combine and calibrate
+separate sea and land dataset.
+
+2) The "simcity" style code that runs the simulation was adapted from
+a UMD class teaching students python ...  (fix this up).  The code
+next needed to be adapted to add pollution sources and a crab
+population to show the effect of population. In addition the water
+levels can also be tuned to study the effect of rising sea levels.
+
+
+** Various screenshots and zip files/pdf files etc.etc. can be attached 
+   and added to the submission
+   
