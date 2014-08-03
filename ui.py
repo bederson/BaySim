@@ -239,7 +239,7 @@ class UI():
             del self.crab_id_dict[key]
         crab_image = self.canvas_get_crabimage(health)
         if crab_image:
-            crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset= (10 - health) / 2)
+            crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset = (10 - health) / 2)
             self.crab_id_dict[key] = crab_id
 
     def update_land_item(self, row_num, col_num, elevation):
@@ -355,7 +355,7 @@ class UI():
         self.canvas.grid(row=1, column=1)
         frame = Frame(self.root)
         frame.grid(row=1, column=2, sticky=N)
-        Label(frame, text="Bay Health", font=("sans-serif", 18, "bold")).grid(row=1, column=2, columnspan=3)
+        Label(frame, text="BaySim", font=("sans-serif", 18, "bold")).grid(row=1, column=2, columnspan=3)
         Label(frame).grid(row=2, column=2)
 
         # Num crabs
