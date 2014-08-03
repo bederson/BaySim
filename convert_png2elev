@@ -18,7 +18,7 @@ if ($redo_png2map) then
    convert LandElevation2.png     LandElevation2.fits 
    # NEMO:  fits -> ccd (1 plane)
    rm map1 map2 map3
-   set poly1=399,227,533,189,630,127,726,0,582,0,422,138        # Rappahannock River (in VA, not looking nice)
+   set poly1=399,227,533,189,630,127,726,-1,582,-1,422,138        # Rappahannock River (in VA, not looking nice)
    fitsccd ChesapeakeBayDepth.fits -           | ccdslice - -    z 1 | ccdpatch - map1 255 poly=$poly1
    fitsccd LandElevation.fits      - blank=255 | ccdslice - map2 z 1
    fitsccd LandElevation2.fits     - blank=255 | ccdslice - map3 z 1
