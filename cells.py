@@ -184,4 +184,4 @@ class BuildingCell(LandCell):
     """
     def __init__(self, world, location, elevation):
         LandCell.__init__(self, world, location, elevation)
-        self.runoff_gen = random() / 2
+        self.runoff_gen = MAX_POLLUTION * random() / 2

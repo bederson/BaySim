@@ -20,8 +20,9 @@ STEP_TIME = 10           # In milliseconds
 INIT_WATER_LEVEL = 0
 EVAPORATION_RATE = 0.001
 MAX_HEALTH = 10
-MAX_POLLUTION = 10
+MAX_POLLUTION = 1.0
 DATA_FILE = "bay.elev"
+# DATA_FILE = "bayz.elev"
 
 # Water sources
 WATER_SOURCES = [
