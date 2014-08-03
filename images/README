@@ -1,0 +1,10 @@
+baysim1.png       
+   left:   water levels from -52 to +1
+   middle: land  levels from -5 to 100
+   right:  land  levels from 100 to 300
+baysim2.png
+   combined, and averaged in 12x12 pixels, subsampled. Data range -46 to 276m
+   but has 3 problems (virginia, mystery near power plant?, aberdeen army)
+baysim3.png
+   fixed up by lifting the problems to +277 m, just above the max of 276
+   in the combined map
