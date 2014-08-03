@@ -132,7 +132,7 @@ class World():
                     index += 1
                 self.grid.append(row_list)
         else:
-            lines = open('bay.elev').readlines()
+            lines = open(DATA_FILE).readlines()
             nxy = self.world_height*self.world_width
             if len(lines) != nxy:
                 print "bad file ",nxy,len(lines)
