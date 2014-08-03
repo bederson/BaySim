@@ -18,6 +18,14 @@ class World():
         self.elevation_max = 0
         self.num_crabs = 0
         self.generate_world(num_foods)
+        self.crab_handlers = []
+
+    def add_crab_handler(self, handler):
+        self.crab_handlers.append(handler)
+
+    def fire_crab_handlers(self, cell):
+        for handler in self.crab_handlers:
+            handler(cell)
 
     def get_food_level(self, row, col):
         """

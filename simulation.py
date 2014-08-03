@@ -13,6 +13,9 @@ class Simulation():
     def add_world_handler(self, handler):
         self.world_handlers.append(handler)
 
+    def add_crab_handler(self, handler):
+        self.world.add_crab_handler(handler)
+
     def fire_world_handler(self):
         for handler in self.world_handlers:
             handler()

@@ -23,6 +23,7 @@ class UI():
         self.canvas.bind_all('<KeyPress>', self.key_handler)
         self.canvas.bind_all('<Button-1>', self.mouse_handler)
         self.simulation.add_world_handler(self.world_handler)
+        self.simulation.add_crab_handler(self.crab_handler)
 
     def create_event_timer(self, delay_time=STEP_TIME):
         self.root.after(delay_time, self.timer_handler)
@@ -44,6 +45,13 @@ class UI():
     def world_handler(self):
         self.canvas_update_visuals()
         self.update_stats()
+
+    def crab_handler(self, cell):
+        loc = cell.location
+        health = 0
+        if cell.crab:
+            health = cell.crab.health
+        self.update_crab_item(loc[ROW_INDEX], loc[COL_INDEX], health)
 
     ######### RENDERING CODE
     def canvas_allocate_images(self):
@@ -230,7 +238,6 @@ class UI():
         if crab_image:
             crab_id = self.canvas_create_image(row_num, col_num, crab_image, offset= (10 - health) / 2)
             self.crab_id_dict[key] = crab_id
-        return crab_image
 
     def update_land_item(self, row_num, col_num, elevation):
         key = (row_num, col_num)
@@ -240,7 +247,6 @@ class UI():
         land_image = self.canvas_get_landimage(elevation)
         land_id = self.canvas_create_image(row_num, col_num, land_image)
         self.cell_id_dict[key] = land_id
-        return land_image
 
     def update_building_item(self, row_num, col_num, elevation):
         key = (row_num, col_num)
@@ -250,7 +256,6 @@ class UI():
         building_image = self.canvas_get_image(IMAGE_BUILDING)
         building_id = self.canvas_create_image(row_num, col_num, building_image)
         self.cell_id_dict[key] = building_id
-        return building_image
 
     def update_water_item(self, row_num, col_num, water_level):
         key = (row_num, col_num)
@@ -315,17 +320,15 @@ class UI():
                 # Update crab overlay
                 if cell.crab:
                     # print cell.crab.health
-                    crab_image = self.update_crab_item(row_num, col_num, cell.crab.health)
-                    if not crab_image:
-                        cell.crab = None
-                    else:
-                        crab_count += 1
+                    self.update_crab_item(row_num, col_num, cell.crab.health)
+                    crab_count += 1
 
                 # Update plants
                 if isinstance(cell, ArableLandCell):
                     plant_level = cell.get_food_level()
                     self.update_plant_item(row_num, col_num, plant_level)
         # print "crab count: " + str(crab_count)
+        self.simulation.world.num_crabs = crab_count
 
     def update_stats(self):
         world = self.simulation.world

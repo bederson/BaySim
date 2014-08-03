@@ -57,39 +57,59 @@ class Crab():
         return loc
 
     def step(self, cell, world):
-        self.move(cell, world)
-
+        died = False
+        spawned = False
         if self.health > 0:
             if cell.pollution > 0:
                 self.health -= cell.pollution
                 if self.health <= 0:
                     self.die(cell, world)
+                    died = True
             else:
                 self.health += 0.1
                 if self.health > MAX_HEALTH:
-                    self.spawn(world)
+                    self.spawn(cell, world)
+                    died = True
+
+        if not died and not spawned:
+            self.move(cell, world)
 
     def move(self, cell, world):
         new_loc = self.find_best_nearby_cell(world)
-        if new_loc:
-            cell.crab = None
-            self.location = new_loc
+        if new_loc != self.location:
+            # print "MOVE FROM " + str(self.location) + " to " + str(new_loc)
             new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
+            temp_health = self.health
+            self.health = 0
+            world.fire_crab_handlers(cell)
+            cell.crab = None
             new_cell.crab = self
+            self.location = new_loc
+            self.health = temp_health
+            world.fire_crab_handlers(new_cell)
+            # print cell, cell.location, cell.crab
+            # print new_cell, new_cell.location, new_cell.crab
 
     def die(self, cell, world):
-        # When UI updates, the crab reference will be removed
+        # print "DIE AT " + str(self.location)
         self.health = 0
-        world.num_crabs -= 1
-        print "crab died", world.num_crabs
+        world.fire_crab_handlers(cell)
+        cell.crab = None
+        # world.num_crabs -= 1
+        # print "crab DIED", world.num_crabs
 
-    def spawn(self, world):
+    def spawn(self, cell, world):
+        # print "SPAWN AT " + str(self.location)
         new_loc = self.get_random_direction(world)
-        if new_loc:
+        if new_loc != self.location:
+            # print "   NEW LOCATION FOUND"
             new_cell = world.get_cell(new_loc[ROW_INDEX], new_loc[COL_INDEX])
             if not new_cell.crab:
-                self.health = self.init_health()
+                # print "  SUCCESSFUL CRAB SPAWN"
                 new_crab = Crab(new_loc)
                 new_cell.crab = new_crab
-                world.num_crabs += 1
-                print "spawned crab", world.num_crabs
+                world.fire_crab_handlers(new_cell)
+                self.health /= 2.0
+                world.fire_crab_handlers(cell)
+                # world.num_crabs += 1
+                # print "spawned crab", world.num_crabs
