@@ -13,55 +13,68 @@ Simulating the Bay: complexity made understandable
 * Description:
   [Tell the story behind the code. What inspired you? Who is your target user? What key features are you most proud of? ]
 
-Ecosystems are complex by their very nature.
-The importance of the right balance between numerous components is often hard to understand.
-Builders want more buildings. Homeowners want to be close to the water. Crabbers want more crab.
-Yet, we clearly can't have more of everything. People often don't understand
-the relationship among the components of the ecosystem and the delicate balance needed to keep things functioning.
+Ecosystems are complex by their very nature.  The importance of the
+right balance between numerous components is often hard to understand.
+Builders want more buildings. Homeowners want to be close to the
+water. Crabbers want more crab.  Yet, we clearly can't have more of
+everything. People often don't understand the relationship among the
+components of the ecosystem and the delicate balance needed to keep
+things functioning.
 
-Both developers have a long history building rich visual and interactive simulations, and we were motivated
-by a Hackathon "consultant" from MDE who suggested building a Bay simulation. We were inspired by
-the popular games of SimCity and MineCraft as they both show how the richness of the simulation and
-interactivy is more important than visual realism to convey complexity.
+Both developers have a long history building rich visual and
+interactive simulations, and we were motivated by a Hackathon
+"consultant" from MDE who suggested building a Bay simulation. We were
+inspired by the popular games of SimCity and MineCraft as they both
+show how the richness of the simulation and interactivy is more
+important than visual realism to convey complexity.
 
-The goal of this project is to help students understand the complexity of the Chesapeake Bay ecosystem,
-and the nature of the relationships among components. We anticipate that BaySim would work well as
-a kiosk in an information center, or as an enabling technology in the classroom for middle or high school
-students.
+The goal of this project is to help students understand the complexity
+of the Chesapeake Bay ecosystem, and the nature of the relationships
+among components. We anticipate that BaySim would work well as a kiosk
+in an information center, or as an enabling technology in the
+classroom for middle or high school students.
 
-We think the interactive and visual nature of the simulation makes it unusally engaging and understandable.
-We proud that we were able to create a fully functional multi-platform (Windows, Mac & Linux) prototype
-during the hackathon by building on one of the developer's previous educational simulation environment.
-The code is open source and available on GitHub. It is clearly structured and has parameters that will make
-it easy for other developers to modify it to create their versions of the simulation and adapt as they see fit.
-We also used a very flexible model for the bay itself by providing the data in the form of a simple
-text file with elevations so the simulation could be readily adapted to other regions.
+We think the interactive and visual nature of the simulation makes it
+unusally engaging and understandable.  We proud that we were able to
+create a fully functional multi-platform (Windows, Mac & Linux)
+prototype during the hackathon by building on one of the developer's
+previous educational simulation environment.  The code is open source
+and available on GitHub. It is clearly structured and has parameters
+that will make it easy for other developers to modify it to create
+their versions of the simulation and adapt as they see fit.  We also
+used a very flexible model for the bay itself by providing the data in
+the form of a simple text file with elevations so the simulation could
+be readily adapted to other regions.
 
 
 Some technical background:
 
 1) We first had to find a (raster based) dataset that describes the
 elevations in both land and sea, and then combined and calibrated the
-separate sea and land dataset. We were surprised that this kind of dataset
-did not exist. By defining our simulated region by just elevation data,
-the simulation can work without change to the code simply by changing the data file.
+separate sea and land dataset. We were surprised that this kind of
+dataset did not exist. By defining our simulated region by just
+elevation data, the simulation can work without change to the code
+simply by changing the data file.
 
 2) The "SimCity" style code that runs the simulation was adapted from
 a UMD class that one of the developers (Bederson) developed last year
-to teach Python to non-computer science majors (http://www.cs.umd.edu/~bederson/classes/paths-f13/).
-That simulation was much simpler and had randomly generated terrain and no sense of
-pollution, crabs, etc. But the basic simulation mechanism existed which let us
-focus on adding the details of the Bay ecology to the simulation such as
-the previously mentioned elevation lab, buildings, pollution run-off, crabs, etc.
-In addition, by controlling the river input and evaporation rates, the impact on
-water level can be investigated, thus showing the impact of changing sea levels.
+to teach Python to non-computer science majors
+(http://www.cs.umd.edu/~bederson/classes/paths-f13/).  That simulation
+was much simpler and had randomly generated terrain and no sense of
+pollution, crabs, etc. But the basic simulation mechanism existed
+which let us focus on adding the details of the Bay ecology to the
+simulation such as the previously mentioned elevation lab, buildings,
+pollution run-off, crabs, etc.  In addition, by controlling the river
+input and evaporation rates, the impact on water level can be
+investigated, thus showing the impact of changing sea levels.
 
-3) The current prototype is written in Python which enables it to run as a downloadable
-app on Windows, Macs or Linux laptops and desktops. However, we envision that BaySim could
-be rewritten for the web using standard web technologies (without plugins) so that it could
-run on any device, including phones and tablets simply by loading a web page. This would enable
-new modes of collaboration and competition across devices that we think could make BaySim
-even more exciting!
+3) The current prototype is written in Python which enables it to run
+as a downloadable app on Windows, Macs or Linux laptops and
+desktops. However, we envision that BaySim could be rewritten for the
+web using standard web technologies (without plugins) so that it could
+run on any device, including phones and tablets simply by loading a
+web page. This would enable new modes of collaboration and competition
+across devices that we think could make BaySim even more exciting!
 
 ** Various screenshots and zip files/pdf files etc.etc. can be attached 
    and added to the submission
