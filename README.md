@@ -9,6 +9,9 @@ simcity style game adds a realistic map of the Cheseapeake Bay and
 allows you to study the interplay of water levels, pollution and a
 crab population as a measure of the health of the ecosystem.
 
+Watch a 60 second video
+[https://www.youtube.com/watch?v=ujaMIdameas]
+
 Running BaySim
 --------------
 
